@@ -58,10 +58,18 @@ public abstract class BaseTest {
     }
 
     /**
-     * Navigates current browser session to local dev app (default: http://localhost:3000)
+     * Navigates current browser session to the Storefront application
      */
-    protected void openLocalApp() {
-        String url = ConfigReader.get("local.app.url", "http://localhost:3000");
+    protected void openStorefront() {
+        String url = ConfigReader.get("app.url", "http://localhost:4321");
+        openUrl(url);
+    }
+
+    /**
+     * Navigates current browser session to the Admin Portal
+     */
+    protected void openAdmin() {
+        String url = ConfigReader.get("admin.url", "http://localhost:4321/admin");
         openUrl(url);
     }
 
@@ -71,21 +79,5 @@ public abstract class BaseTest {
     protected void openUrl(String url) {
         LogUtil.info("Navigating to URL: {}", url);
         DriverManager.getDriver().get(url);
-    }
-
-    /**
-     * Navigates current browser session to SauceDemo
-     */
-    protected void openSauceDemo() {
-        String url = ConfigReader.get("saucedemo.url", "https://www.saucedemo.com");
-        openUrl(url);
-    }
-
-    /**
-     * Navigates current browser session to Automation Exercise
-     */
-    protected void openAutomationExercise() {
-        String url = ConfigReader.get("automationexercise.url", "https://automationexercise.com");
-        openUrl(url);
     }
 }

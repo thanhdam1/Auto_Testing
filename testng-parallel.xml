@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="E-Commerce Parallel Execution Suite" parallel="classes" thread-count="2" verbose="2">
+<suite name="Noi That Parallel Execution Suite" parallel="classes" thread-count="2" verbose="2">
     <listeners>
         <listener class-name="com.ecommerce.listeners.TestListener"/>
     </listeners>
@@ -8,8 +8,8 @@
     <test name="Parallel Core Tests">
         <parameter name="browser" value="chrome"/>
         <classes>
-            <class name="com.ecommerce.tests.saucedemo.LoginTest"/>
-            <class name="com.ecommerce.tests.saucedemo.ProductCatalogTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminProductManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
         </classes>
     </test>
 </suite>
