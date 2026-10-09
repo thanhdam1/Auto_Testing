@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="E-Commerce Comprehensive Suite (SauceDemo + AutomationExercise)" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <test name="SauceDemo Core Regression">
+        <classes>
+            <class name="com.ecommerce.tests.saucedemo.LoginTest"/>
+            <class name="com.ecommerce.tests.saucedemo.ProductCatalogTest"/>
+            <class name="com.ecommerce.tests.saucedemo.CartTest"/>
+            <class name="com.ecommerce.tests.saucedemo.CheckoutE2ETest"/>
+        </classes>
+    </test>
+
+    <test name="AutomationExercise Catalog and Search">
+        <classes>
+            <class name="com.ecommerce.tests.automationexercise.ProductSearchTest"/>
+        </classes>
+    </test>
+</suite>
