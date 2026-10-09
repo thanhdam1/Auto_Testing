@@ -3,6 +3,7 @@ package com.ecommerce.tests.noithat;
 import com.ecommerce.base.BaseTest;
 import com.ecommerce.pages.noithat.StorefrontCatalogPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.ConfigReader;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,8 +14,8 @@ public class StorefrontCatalogTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void setupTest() {
-        openStorefront();
-        openUrl("http://localhost:4321/san-pham");
+        String baseUrl = ConfigReader.get("app.url", "https://86h0mht3-4321.asse.devtunnels.ms");
+        openUrl(baseUrl + "/san-pham");
         catalogPage = new StorefrontCatalogPage();
     }
 

@@ -74,6 +74,22 @@ public abstract class BaseTest {
     }
 
     /**
+     * Navigates current browser session to ShopNova Marketplace (Project 2)
+     */
+    protected void openNovaShop() {
+        String url = ConfigReader.get("novashop.app.url", "http://localhost:5173");
+        openUrl(url);
+    }
+
+    /**
+     * Navigates current browser session to ShopNova Seller Portal (Project 2)
+     */
+    protected void openNovaShopSeller() {
+        String url = ConfigReader.get("novashop.seller.url", "http://localhost:5173/nguoi-ban");
+        openUrl(url);
+    }
+
+    /**
      * Navigates to an arbitrary URL or path
      */
     protected void openUrl(String url) {

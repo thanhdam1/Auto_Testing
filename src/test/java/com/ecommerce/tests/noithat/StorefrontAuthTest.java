@@ -3,6 +3,7 @@ package com.ecommerce.tests.noithat;
 import com.ecommerce.base.BaseTest;
 import com.ecommerce.pages.noithat.StorefrontLoginPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.ConfigReader;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,13 +14,9 @@ public class StorefrontAuthTest extends BaseTest {
 
     @BeforeMethod(alwaysRun = true)
     public void setupTest() {
-        openStorefront();
-        openUrl(getCurrentStorefrontLoginUrl());
+        String baseUrl = ConfigReader.get("app.url", "https://86h0mht3-4321.asse.devtunnels.ms");
+        openUrl(baseUrl + "/dang-nhap");
         loginPage = new StorefrontLoginPage();
-    }
-
-    private String getCurrentStorefrontLoginUrl() {
-        return "http://localhost:4321/dang-nhap";
     }
 
     @Test(groups = {"smoke", "auth"}, description = "Xác nhận trang Đăng nhập tải thành công và đầy đủ thành phần giao diện")

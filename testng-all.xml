@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Noi That Comprehensive Suite (Admin + Storefront)" verbose="2">
+<suite name="Multi-Project E-Commerce Automation Suite (Noi That + ShopNova)" verbose="2">
     <listeners>
         <listener class-name="com.ecommerce.listeners.TestListener"/>
     </listeners>
 
-    <test name="Admin Portal Management Tests">
+    <!-- PROJECT 1: NOI THAT & PHONG THUY -->
+    <test name="Project 1: Noi That Admin Portal">
         <classes>
             <class name="com.ecommerce.tests.noithat.AdminProductManagementTest"/>
             <class name="com.ecommerce.tests.noithat.AdminOrderManagementTest"/>
         </classes>
     </test>
 
-    <test name="Storefront Customer Flows">
+    <test name="Project 1: Noi That Storefront">
         <classes>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
+        </classes>
+    </test>
+
+    <!-- PROJECT 2: SHOPNOVA MARKETPLACE -->
+    <test name="Project 2: ShopNova Buyer Flows">
+        <classes>
+            <class name="com.ecommerce.tests.novashop.NovaAuthTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaProductSearchTest"/>
+        </classes>
+    </test>
+
+    <test name="Project 2: ShopNova Seller Portal">
+        <classes>
+            <class name="com.ecommerce.tests.novashop.NovaSellerManagementTest"/>
         </classes>
     </test>
 </suite>

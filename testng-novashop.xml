@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="ShopNova E-Commerce Marketplace Suite (Project 2)" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <test name="ShopNova Authentication &amp; Search">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.novashop.NovaAuthTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaProductSearchTest"/>
+        </classes>
+    </test>
+
+    <test name="ShopNova Seller Portal">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.novashop.NovaSellerManagementTest"/>
+        </classes>
+    </test>
+</suite>
