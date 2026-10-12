@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="QR Repair Ticket System Suite (Project 3)" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Repair System Public &amp; Customer Flows">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.repair.RepairNavigationTest"/>
+            <class name="com.ecommerce.tests.repair.RepairTrackingTest"/>
+            <class name="com.ecommerce.tests.repair.RepairBookingTest"/>
+        </classes>
+    </test>
+
+    <test name="Repair System Staff &amp; Technician Portal">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.repair.RepairAuthTest"/>
+        </classes>
+    </test>
+</suite>

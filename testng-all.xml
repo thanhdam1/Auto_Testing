@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Multi-Project E-Commerce Automation Suite (Noi That + ShopNova)" verbose="2">
+<suite name="Multi-Project Automation Suite (3 Projects)" verbose="2">
     <listeners>
         <listener class-name="com.ecommerce.listeners.TestListener"/>
     </listeners>
@@ -31,6 +31,21 @@
     <test name="Project 2: ShopNova Seller Portal">
         <classes>
             <class name="com.ecommerce.tests.novashop.NovaSellerManagementTest"/>
+        </classes>
+    </test>
+
+    <!-- PROJECT 3: QR REPAIR TICKET SYSTEM -->
+    <test name="Project 3: QR Repair Customer Flows">
+        <classes>
+            <class name="com.ecommerce.tests.repair.RepairNavigationTest"/>
+            <class name="com.ecommerce.tests.repair.RepairTrackingTest"/>
+            <class name="com.ecommerce.tests.repair.RepairBookingTest"/>
+        </classes>
+    </test>
+
+    <test name="Project 3: QR Repair Staff Portal">
+        <classes>
+            <class name="com.ecommerce.tests.repair.RepairAuthTest"/>
         </classes>
     </test>
 </suite>

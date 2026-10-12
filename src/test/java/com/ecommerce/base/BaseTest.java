@@ -90,6 +90,22 @@ public abstract class BaseTest {
     }
 
     /**
+     * Navigates current browser session to QR Repair Ticket System (Project 3)
+     */
+    protected void openRepairApp() {
+        String url = ConfigReader.get("repair.app.url", "http://localhost:5174");
+        openUrl(url);
+    }
+
+    /**
+     * Navigates current browser session to QR Repair Admin/Staff Portal (Project 3)
+     */
+    protected void openRepairAdmin() {
+        String url = ConfigReader.get("repair.admin.url", "http://localhost:5174/login");
+        openUrl(url);
+    }
+
+    /**
      * Navigates to an arbitrary URL or path
      */
     protected void openUrl(String url) {
