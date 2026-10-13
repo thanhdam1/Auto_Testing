@@ -17,6 +17,17 @@
         <classes>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
+            <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
+            <class name="com.ecommerce.tests.noithat.ProductDetailTest"/>
+            <class name="com.ecommerce.tests.noithat.CartTest"/>
+            <class name="com.ecommerce.tests.noithat.CheckoutFlowTest"/>
+        </classes>
+    </test>
+
+    <!-- PROJECT 1: API LAYER (backend Express + Prisma) -->
+    <test name="Project 1: Noi That Backend API">
+        <classes>
+            <class name="com.ecommerce.tests.api.NoiThatApiTest"/>
         </classes>
     </test>
 

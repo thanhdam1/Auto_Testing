@@ -179,4 +179,107 @@ public class AdminProductPage extends BasePage {
     public String getToastText() {
         return getText(toastMessage);
     }
+
+    /**
+     * Chờ toast xuất hiện rồi trả về nội dung (dùng để assert thông báo sau khi thêm/sửa/xoá).
+     */
+    public String waitForToastText() {
+        WaitUtil.waitForVisibility(toastContainer, 5);
+        String text = getToastText();
+        WaitUtil.waitForInvisibility(toastContainer, 5);
+        return text;
+    }
+
+    // ==================================================================
+    // BỔ SUNG PHỤC VỤ PHASE 1 (assert chặt hơn cho thêm/sửa/xoá/đổi trạng thái)
+    // ==================================================================
+
+    /**
+     * Dòng sản phẩm đầu tiên đang hiển thị trong bảng.
+     */
+    private WebElement firstVisibleRow() {
+        for (WebElement row : getDriver().findElements(tableRows)) {
+            if (row.isDisplayed()) {
+                return row;
+            }
+        }
+        throw new org.openqa.selenium.NoSuchElementException("Bảng sản phẩm không có dòng nào hiển thị.");
+    }
+
+    /**
+     * Dòng sản phẩm theo tên (không phân biệt hoa thường).
+     */
+    private WebElement rowByName(String productName) {
+        for (WebElement row : getDriver().findElements(tableRows)) {
+            if (row.isDisplayed() && row.getText().toLowerCase().contains(productName.toLowerCase())) {
+                return row;
+            }
+        }
+        throw new org.openqa.selenium.NoSuchElementException("Không tìm thấy dòng sản phẩm: " + productName);
+    }
+
+    public String getFirstProductName() {
+        return firstVisibleRow().getAttribute("data-name");
+    }
+
+    /**
+     * Giá trị trạng thái thật của dòng đầu tiên ({@code data-status}: con-hang / het-hang / nhap).
+     */
+    public String getFirstProductStatusValue() {
+        return firstVisibleRow().getAttribute("data-status");
+    }
+
+    public String getFirstProductStatusLabel() {
+        return firstVisibleRow().findElement(By.cssSelector("[data-btn-toggle-status]")).getText().trim();
+    }
+
+    public String getProductStatusValue(String productName) {
+        return rowByName(productName).getAttribute("data-status");
+    }
+
+    public String getProductStatusLabel(String productName) {
+        return rowByName(productName).findElement(By.cssSelector("[data-btn-toggle-status]")).getText().trim();
+    }
+
+    /**
+     * Trạng thái kế tiếp theo vòng lặp của UI: con-hang -> het-hang -> nhap -> con-hang.
+     */
+    public static String nextStatusInCycle(String currentStatus) {
+        return switch (currentStatus == null ? "" : currentStatus) {
+            case "con-hang" -> "het-hang";
+            case "het-hang" -> "nhap";
+            default -> "con-hang";
+        };
+    }
+
+    public String getProductCountLabelText() {
+        return getText(lblProductCount);
+    }
+
+    public boolean isEmptyMessageDisplayed() {
+        return isDisplayed(emptyMessage);
+    }
+
+    public void confirmDelete() {
+        click(btnConfirmDelete, "Nút xác nhận xóa sản phẩm");
+    }
+
+    /**
+     * Xoá sản phẩm theo tên: mở modal xác nhận rồi xác nhận xoá.
+     */
+    public void deleteProductByName(String productName) {
+        WebElement row = rowByName(productName);
+        row.findElement(By.cssSelector("[data-btn-delete]")).click();
+        WaitUtil.waitForVisibility(modalDelete, 5);
+        confirmDelete();
+    }
+
+    /**
+     * Xoá sản phẩm theo tên nhưng KHÔNG xác nhận (dùng để kiểm tra nhánh huỷ).
+     */
+    public void requestDeleteProductByName(String productName) {
+        WebElement row = rowByName(productName);
+        row.findElement(By.cssSelector("[data-btn-delete]")).click();
+        WaitUtil.waitForVisibility(modalDelete, 5);
+    }
 }

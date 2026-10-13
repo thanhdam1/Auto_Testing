@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Noi That Phong Thuy Test Suite" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Phong Thuy Consultation Tests">
+        <classes>
+            <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
+        </classes>
+    </test>
+</suite>

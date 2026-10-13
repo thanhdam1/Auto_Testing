@@ -47,4 +47,33 @@ public class RepairTrackingPage extends BasePage {
     public void navigateBackHome() {
         click(linkBackHome, "Đường dẫn Về trang chủ");
     }
+
+    // ==================================================================
+    // BỔ SUNG PHỤC VỤ F-02: các test tra cứu cần assert được phản hồi của hệ thống
+    // ==================================================================
+
+    /**
+     * Thông báo "không tìm thấy phiếu" (nhiều biến thể chữ hoa/thường).
+     */
+    private final By noResultMessage = By.xpath(
+            "//*[contains(normalize-space(text()),'Không tìm thấy')"
+                    + " or contains(normalize-space(text()),'không tìm thấy')"
+                    + " or contains(normalize-space(text()),'Không có phiếu')"
+                    + " or contains(normalize-space(text()),'không có phiếu')]");
+
+    public boolean isNoResultMessageDisplayed() {
+        try {
+            return getDriver().findElement(noResultMessage).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Sau khi tra cứu, hệ thống phải phản hồi: hoặc có phiếu, hoặc có thông báo không tìm thấy.
+     * Dùng để assert thay cho việc chỉ "click rồi log" như trước.
+     */
+    public boolean hasSearchFeedback() {
+        return getTicketResultsCount() > 0 || isNoResultMessageDisplayed();
+    }
 }

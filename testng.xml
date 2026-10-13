@@ -12,6 +12,16 @@
             <class name="com.ecommerce.tests.noithat.AdminOrderManagementTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
+            <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
+        </classes>
+    </test>
+
+    <test name="Noi That Storefront Commerce Flows (Phase 1)">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.noithat.ProductDetailTest"/>
+            <class name="com.ecommerce.tests.noithat.CartTest"/>
+            <class name="com.ecommerce.tests.noithat.CheckoutFlowTest"/>
         </classes>
     </test>
 </suite>

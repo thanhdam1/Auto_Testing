@@ -37,13 +37,16 @@ public class StorefrontCatalogTest extends BaseTest {
         ExtentReportManager.logInfo("Áp dụng bộ lọc danh mục: 'sofa'");
         catalogPage.filterByCategory("sofa");
 
-        int filteredCount = catalogPage.getVisibleProductCount();
+        int filteredCount = catalogPage.waitForVisibleProductsInCategory("sofa");
         ExtentReportManager.logInfo("Số lượng sản phẩm Sofa: " + filteredCount);
         Assert.assertTrue(filteredCount > 0, "Phải có ít nhất 1 sản phẩm thuộc danh mục sofa.");
+        Assert.assertTrue(catalogPage.getVisibleProductCategories().stream()
+                        .allMatch("sofa"::equals),
+                "Mọi card hiển thị phải thuộc danh mục sofa.");
 
         ExtentReportManager.logInfo("Xóa bộ lọc để trở về danh sách ban đầu");
         catalogPage.resetAllFilters();
-        int resetCount = catalogPage.getVisibleProductCount();
+        int resetCount = catalogPage.waitForVisibleProductCount(initialCount);
         Assert.assertEquals(resetCount, initialCount, "Sau khi xóa lọc, số sản phẩm hiển thị phải trở về ban đầu.");
     }
 

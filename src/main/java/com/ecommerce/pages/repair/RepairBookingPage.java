@@ -44,4 +44,49 @@ public class RepairBookingPage extends BasePage {
     public boolean isBookingSuccessDisplayed() {
         return isDisplayed(successMessage);
     }
+
+    // ==================================================================
+    // BỔ SUNG PHỤC VỤ F-02: test đặt lịch cần assert được dữ liệu đã nhập và phản hồi khi submit
+    // ==================================================================
+
+    private final By anyFeedbackMessage = By.xpath(
+            "//*[contains(@class,'red') or contains(@class,'rose') or contains(@class,'emerald')]"
+                    + "[normalize-space(text())!='']");
+
+    public String getEnteredFullName() {
+        return find(inputFullName).getAttribute("value");
+    }
+
+    public String getEnteredPhone() {
+        return find(inputPhone).getAttribute("value");
+    }
+
+    public String getEnteredErrorDescription() {
+        return getDriver().findElement(txtErrorDescription).getAttribute("value");
+    }
+
+    /**
+     * Kiểm tra màn hình thành công "ngay lập tức" (không chờ 10 giây như {@link #isBookingSuccessDisplayed()}).
+     */
+    public boolean isBookingSuccessVisibleNow() {
+        try {
+            return getDriver().findElement(successMessage).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Sau khi submit, hệ thống phải phản hồi: hoặc màn hình đặt lịch thành công, hoặc thông báo lỗi/validate.
+     */
+    public boolean hasSubmitFeedback() {
+        if (isBookingSuccessVisibleNow()) {
+            return true;
+        }
+        try {
+            return getDriver().findElement(anyFeedbackMessage).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

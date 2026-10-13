@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Noi That Backend API Suite (khong can browser)" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <!--
+        Bộ test tầng API (F-03) cho backend Express + Prisma tại api.base.url (mặc định http://localhost:4000/api).
+        Chạy: mvn test "-DsuiteFile=testng-api.xml"
+        Nếu backend chưa bật, NoiThatApiTest sẽ tự SKIP kèm thông điệp rõ ràng.
+    -->
+    <test name="Noi That API Contract Tests">
+        <classes>
+            <class name="com.ecommerce.tests.api.NoiThatApiTest"/>
+        </classes>
+    </test>
+</suite>

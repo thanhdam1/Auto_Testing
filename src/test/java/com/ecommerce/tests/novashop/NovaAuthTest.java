@@ -54,7 +54,13 @@ public class NovaAuthTest extends BaseTest {
         ExtentReportManager.logInfo("Đăng nhập với tài khoản Buyer: minhanh / 123456");
         loginPage.login("minhanh", "123456");
 
-        ExtentReportManager.logInfo("Đã submit thông tin đăng nhập thành công");
+        // F-02: trước đây test này KHÔNG có assertion nào (luôn PASS dù đăng nhập hỏng)
+        Assert.assertFalse(loginPage.isErrorMessageDisplayed(),
+                "Đăng nhập buyer hợp lệ không được hiển thị thông báo lỗi.");
+        String currentUrl = getDriver().getCurrentUrl();
+        ExtentReportManager.logInfo("URL sau khi đăng nhập buyer: " + currentUrl);
+        Assert.assertFalse(currentUrl.contains("/dang-nhap"),
+                "Đăng nhập thành công phải rời khỏi trang đăng nhập. URL thực tế: " + currentUrl);
     }
 
     @Test(groups = {"smoke", "novashop", "auth"}, description = "Kiểm tra đăng nhập tài khoản người bán chuyển hướng đến kênh người bán")
@@ -62,6 +68,12 @@ public class NovaAuthTest extends BaseTest {
         ExtentReportManager.logInfo("Đăng nhập với tài khoản Seller: ankerseller / 123456");
         loginPage.login("ankerseller", "123456");
 
-        ExtentReportManager.logInfo("Đã submit thông tin đăng nhập tài khoản người bán");
+        // F-02: trước đây test này KHÔNG có assertion nào
+        Assert.assertFalse(loginPage.isErrorMessageDisplayed(),
+                "Đăng nhập seller hợp lệ không được hiển thị thông báo lỗi.");
+        String currentUrl = getDriver().getCurrentUrl();
+        ExtentReportManager.logInfo("URL sau khi đăng nhập seller: " + currentUrl);
+        Assert.assertFalse(currentUrl.contains("/dang-nhap"),
+                "Đăng nhập seller thành công phải rời khỏi trang đăng nhập. URL thực tế: " + currentUrl);
     }
 }

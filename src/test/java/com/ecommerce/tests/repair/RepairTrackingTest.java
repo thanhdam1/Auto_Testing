@@ -25,12 +25,30 @@ public class RepairTrackingTest extends BaseTest {
         Assert.assertTrue(trackingPage.isPageLoaded(), "Trang Tra Cứu Tiến Độ phải hiển thị tiêu đề hợp lệ.");
     }
 
-    @Test(groups = {"regression", "repair", "tracking"}, description = "Tra cứu tiến độ với số điện thoại mẫu")
+    @Test(groups = {"regression", "repair", "tracking"}, description = "Tra cứu tiến độ với số điện thoại mẫu phải trả về phiếu hoặc thông báo không tìm thấy")
     public void testSearchBySamplePhone() {
         String samplePhone = "0901234567";
         ExtentReportManager.logInfo("Thực hiện tra cứu theo số điện thoại: " + samplePhone);
         trackingPage.searchByPhone(samplePhone);
 
-        ExtentReportManager.logInfo("Đã thực hiện tra cứu thành công.");
+        // F-02: trước đây test này chỉ click rồi log, không hề assert kết quả
+        int results = trackingPage.getTicketResultsCount();
+        ExtentReportManager.logInfo("Số phiếu tra cứu được: " + results);
+        Assert.assertTrue(trackingPage.hasSearchFeedback(),
+                "Sau khi tra cứu, hệ thống phải hiển thị danh sách phiếu hoặc thông báo không tìm thấy.");
+    }
+
+    @Test(groups = {"regression", "repair", "tracking"}, description = "Tra cứu lặp lại 2 lần không làm nhân đôi kết quả hiển thị")
+    public void testRepeatedSearchDoesNotDuplicateResults() {
+        String samplePhone = "0901234567";
+        trackingPage.searchByPhone(samplePhone);
+        int firstResults = trackingPage.getTicketResultsCount();
+
+        trackingPage.searchByPhone(samplePhone);
+        int secondResults = trackingPage.getTicketResultsCount();
+        ExtentReportManager.logInfo("Kết quả lần 1 = " + firstResults + ", lần 2 = " + secondResults);
+
+        Assert.assertEquals(secondResults, firstResults,
+                "Tra cứu lại cùng số điện thoại không được nhân đôi số phiếu hiển thị.");
     }
 }

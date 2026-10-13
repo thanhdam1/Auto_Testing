@@ -45,8 +45,10 @@ public final class ExtentReportManager {
 
             // System information
             extentReports.setSystemInfo("Framework", "Java + Selenium + TestNG + Maven");
-            extentReports.setSystemInfo("Target Sites", "SauceDemo & Automation Exercise");
+            extentReports.setSystemInfo("Target Sites",
+                    "P1 Noi That E-Commerce | P2 ShopNova Marketplace | P3 QR Repair Ticket System");
             extentReports.setSystemInfo("Environment", "QA / Staging");
+            extentReports.setSystemInfo("Suite File", System.getProperty("suiteFile", "testng.xml"));
             extentReports.setSystemInfo("User", System.getProperty("user.name"));
             extentReports.setSystemInfo("OS", System.getProperty("os.name"));
             extentReports.setSystemInfo("Java Version", System.getProperty("java.version"));
@@ -63,7 +65,14 @@ public final class ExtentReportManager {
         }
     }
 
-    public static ExtentTest createTest(String testName, String description) {
+    /**
+     * Tạo node test trong báo cáo.
+     *
+     * <p>Tự khởi tạo report nếu chưa có: các suite KHÔNG kế thừa {@code BaseTest}
+     * (ví dụ suite API {@code testng-api.xml}) trước đây gây NullPointerException tại đây.</p>
+     */
+    public static synchronized ExtentTest createTest(String testName, String description) {
+        initReports();
         ExtentTest test = extentReports.createTest(testName, description);
         testThreadLocal.set(test);
         return test;

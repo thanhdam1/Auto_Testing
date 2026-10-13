@@ -16,6 +16,10 @@
             <class name="com.ecommerce.tests.noithat.AdminOrderManagementTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
+            <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
+            <class name="com.ecommerce.tests.noithat.ProductDetailTest"/>
+            <class name="com.ecommerce.tests.noithat.CartTest"/>
+            <class name="com.ecommerce.tests.noithat.CheckoutFlowTest"/>
         </classes>
     </test>
 </suite>

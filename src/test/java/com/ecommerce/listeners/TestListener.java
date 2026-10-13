@@ -16,6 +16,8 @@ public class TestListener implements ITestListener {
     @Override
     public void onFinish(ITestContext context) {
         LogUtil.info("Finished Test Suite: {}", context.getName());
+        // Ghi báo cáo cho cả những suite không kế thừa BaseTest (ví dụ testng-api.xml)
+        ExtentReportManager.flushReports();
     }
 
     @Override
