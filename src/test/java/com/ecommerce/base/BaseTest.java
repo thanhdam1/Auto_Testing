@@ -144,7 +144,7 @@ public abstract class BaseTest {
      * Navigates current browser session to QR Repair Ticket System (Project 3)
      */
     protected void openRepairApp() {
-        String url = ConfigReader.get("repair.app.url", "http://localhost:5174");
+        String url = ConfigReader.get("repair.app.url", "http://localhost:5173");
         openUrl(url);
     }
 
@@ -152,7 +152,7 @@ public abstract class BaseTest {
      * Navigates current browser session to QR Repair Admin/Staff Portal (Project 3)
      */
     protected void openRepairAdmin() {
-        String url = ConfigReader.get("repair.admin.url", "http://localhost:5174/login");
+        String url = ConfigReader.get("repair.admin.url", "http://localhost:5173/login");
         openUrl(url);
     }
 

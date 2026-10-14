@@ -11,6 +11,7 @@
             <class name="com.ecommerce.tests.repair.RepairNavigationTest"/>
             <class name="com.ecommerce.tests.repair.RepairTrackingTest"/>
             <class name="com.ecommerce.tests.repair.RepairBookingTest"/>
+            <class name="com.ecommerce.tests.repair.RepairBookingBoundaryTest"/>
         </classes>
     </test>
 
@@ -18,6 +19,9 @@
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.ecommerce.tests.repair.RepairAuthTest"/>
+            <class name="com.ecommerce.tests.repair.RepairAdminDashboardTest"/>
+            <class name="com.ecommerce.tests.repair.RepairAdminBoundaryTest"/>
+            <class name="com.ecommerce.tests.repair.RepairTechnicianDashboardTest"/>
         </classes>
     </test>
 </suite>

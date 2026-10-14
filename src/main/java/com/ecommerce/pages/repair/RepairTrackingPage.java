@@ -13,10 +13,10 @@ public class RepairTrackingPage extends BasePage {
 
     // Locators
     private final By headingTracking = By.xpath("//h1[contains(text(),'Tra Cứu Tiến Độ Sửa Chữa')]");
-    private final By inputPhone = By.cssSelector("input[type='tel']");
+    private final By inputPhone = By.cssSelector("input[type='tel'][placeholder='Nhập số điện thoại (VD: 0901234567)']");
     private final By btnSearch = By.cssSelector("form button[type='submit']");
-    private final By ticketCards = By.cssSelector("div.rounded-2xl.shadow-md, div.border-slate-200");
-    private final By linkBackHome = By.xpath("//a[contains(text(),'Về trang chủ')]");
+    private final By ticketCards = By.cssSelector("main a[href*='/track/']");
+    private final By linkBackHome = By.xpath("//a[normalize-space()='Về trang chủ']");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingTracking);

@@ -2,6 +2,7 @@ package com.ecommerce.pages.repair;
 
 import com.ecommerce.pages.base.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 
 /**
  * Page Object for Repair Appointment Booking Form (/dat-lich)
@@ -88,5 +89,14 @@ public class RepairBookingPage extends BasePage {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public boolean hasNativeValidationMessage() {
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        Object message = js.executeScript(
+                "return Array.from(document.querySelectorAll('form input, form textarea, form select'))"
+                        + ".map(function(e) { return e.validationMessage; })"
+                        + ".find(function(value) { return value && value.trim() !== ''; });");
+        return message != null && !message.toString().isBlank();
     }
 }
