@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 
 /**
  * Page Object for Website_NoiThat Checkout Page (/checkout)
+ * Port: 4321
  * Project: NguyenBang01/Website_NoiThat
  */
 public class BangCheckoutPage extends BasePage {
@@ -23,6 +24,10 @@ public class BangCheckoutPage extends BasePage {
     private final By inputWard = By.xpath("//input[@placeholder='Phường/Xã']");
     private final By inputStreet = By.xpath("//input[contains(@placeholder,'Âu Cơ')]");
     private final By textareaNote = By.xpath("//textarea[contains(@placeholder,'Giao giờ hành chính')]");
+
+    // Coupon
+    private final By inputCoupon = By.xpath("//input[contains(@placeholder,'Mã giảm giá')]");
+    private final By btnApplyCoupon = By.xpath("//button[contains(text(),'Áp dụng')]");
 
     // Payment Radio
     private final By radioPaymentCOD = By.xpath("//label[contains(.,'COD')]//input[@type='radio']");
@@ -54,6 +59,13 @@ public class BangCheckoutPage extends BasePage {
         type(inputRecipientName, name, "Tên người nhận");
         type(inputRecipientPhone, phone, "Số điện thoại người nhận");
         type(inputStreet, street, "Địa chỉ chi tiết");
+    }
+
+    public void applyCoupon(String code) {
+        if (isDisplayed(inputCoupon)) {
+            type(inputCoupon, code, "Mã giảm giá");
+            click(btnApplyCoupon, "Nút Áp dụng mã");
+        }
     }
 
     public void selectPaymentCOD() {
