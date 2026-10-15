@@ -157,6 +157,22 @@ public abstract class BaseTest {
     }
 
     /**
+     * Navigates current browser session to Website_NoiThat Storefront (Project 4 - NguyenBang01)
+     */
+    protected void openNoiThatBangApp() {
+        String url = ConfigReader.get("noithatbang.app.url", "http://localhost:4321");
+        openUrl(url);
+    }
+
+    /**
+     * Navigates current browser session to Website_NoiThat Admin Portal (Project 4 - NguyenBang01)
+     */
+    protected void openNoiThatBangAdmin() {
+        String url = ConfigReader.get("noithatbang.admin.url", "http://localhost:5173");
+        openUrl(url);
+    }
+
+    /**
      * Navigates to an arbitrary URL or path
      */
     protected void openUrl(String url) {

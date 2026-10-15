@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Website_NoiThat Suite (Project 4 - NguyenBang01)" verbose="2">
+    <listeners>
+        <listener class-name="com.ecommerce.listeners.TestListener"/>
+    </listeners>
+
+    <test name="Website_NoiThat Go Backend API">
+        <classes>
+            <class name="com.ecommerce.tests.noithatbang.BangApiTest"/>
+        </classes>
+    </test>
+
+    <test name="Website_NoiThat Storefront (Astro 4321)">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.noithatbang.BangStorefrontTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangCheckoutTest"/>
+        </classes>
+    </test>
+
+    <test name="Website_NoiThat Admin Portal (Vite React 5173)">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminAuthTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminProductTest"/>
+        </classes>
+    </test>
+</suite>

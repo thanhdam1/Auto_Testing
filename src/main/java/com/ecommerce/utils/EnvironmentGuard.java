@@ -80,6 +80,9 @@ public final class EnvironmentGuard {
         if (testClassName.contains(".api.")) {
             return ConfigReader.get("api.base.url", "http://localhost:4000/api");
         }
+        if (testClassName.contains(".noithatbang.")) {
+            return ConfigReader.get("noithatbang.app.url", "http://localhost:4321");
+        }
         if (testClassName.contains(".noithat.")) {
             return ConfigReader.get("app.url", "http://localhost:4321");
         }
