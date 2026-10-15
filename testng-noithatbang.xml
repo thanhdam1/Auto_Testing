@@ -24,6 +24,7 @@
         <classes>
             <class name="com.ecommerce.tests.noithatbang.BangAdminAuthTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangAdminProductTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminCustomerTest"/>
         </classes>
     </test>
 </suite>

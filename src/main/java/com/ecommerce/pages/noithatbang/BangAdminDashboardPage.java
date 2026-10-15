@@ -39,6 +39,11 @@ public class BangAdminDashboardPage extends BasePage {
         click(navCategories, "Menu Quản lý Danh mục");
     }
 
+    public BangAdminCustomerPage navigateToCustomers() {
+        click(navCustomers, "Menu Quản lý Khách hàng");
+        return new BangAdminCustomerPage();
+    }
+
     public void navigateToCoupons() {
         click(navCoupons, "Menu Quản lý Mã giảm giá");
     }
