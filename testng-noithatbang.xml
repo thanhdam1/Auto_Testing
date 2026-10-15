@@ -16,6 +16,7 @@
         <classes>
             <class name="com.ecommerce.tests.noithatbang.BangStorefrontTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangCheckoutTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangCustomerOrdersTest"/>
         </classes>
     </test>
 
