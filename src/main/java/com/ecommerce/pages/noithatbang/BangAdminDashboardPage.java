@@ -31,8 +31,9 @@ public class BangAdminDashboardPage extends BasePage {
         return new BangAdminProductPage();
     }
 
-    public void navigateToOrders() {
+    public BangAdminOrdersPage navigateToOrders() {
         click(navOrders, "Menu Quản lý Đơn hàng");
+        return new BangAdminOrdersPage();
     }
 
     public void navigateToCategories() {
@@ -42,6 +43,11 @@ public class BangAdminDashboardPage extends BasePage {
     public BangAdminCustomerPage navigateToCustomers() {
         click(navCustomers, "Menu Quản lý Khách hàng");
         return new BangAdminCustomerPage();
+    }
+
+    public BangAdminReviewsPage navigateToReviews() {
+        click(By.cssSelector("aside nav a[href='/reviews']"), "Menu Quản lý Đánh giá");
+        return new BangAdminReviewsPage();
     }
 
     public void navigateToCoupons() {
