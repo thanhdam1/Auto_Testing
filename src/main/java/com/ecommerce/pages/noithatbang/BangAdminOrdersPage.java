@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Page Object for Website_NoiThat Admin Order Management Page (/orders)
+ * Port: 5173
  * Project: NguyenBang01/Website_NoiThat
  */
 public class BangAdminOrdersPage extends BasePage {
@@ -25,17 +26,27 @@ public class BangAdminOrdersPage extends BasePage {
     private final By tabCancelled = By.xpath("//button[contains(.,'Đã hủy')]");
 
     // Table
+    private final By tableHeaders = By.cssSelector("table thead th");
     private final By tableRows = By.cssSelector("table tbody tr");
+    private final By linkFirstOrderDetail = By.xpath("(//table tbody tr//a[contains(@href,'/orders/')])[1]");
     private final By emptyState = By.xpath("//div[contains(.,'Không tìm thấy đơn hàng')]");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingTitle);
     }
 
+    public boolean areTableColumnsDisplayed() {
+        try {
+            return !findAll(tableHeaders).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void searchOrder(String keyword) {
         type(inputSearch, keyword, "Tìm kiếm đơn hàng: " + keyword);
         try {
-            Thread.sleep(500); // 400ms debounce
+            Thread.sleep(600); // 400ms debounce
         } catch (InterruptedException ignored) {}
     }
 
@@ -49,6 +60,9 @@ public class BangAdminOrdersPage extends BasePage {
             default -> tabAll;
         };
         click(target, "Tab trạng thái: " + status);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {}
     }
 
     public int getOrderRowCount() {
@@ -62,5 +76,11 @@ public class BangAdminOrdersPage extends BasePage {
 
     public boolean isEmptyStateDisplayed() {
         return isDisplayed(emptyState);
+    }
+
+    public void clickFirstOrderDetail() {
+        if (isDisplayed(linkFirstOrderDetail)) {
+            click(linkFirstOrderDetail, "Chi tiết đơn hàng đầu tiên");
+        }
     }
 }

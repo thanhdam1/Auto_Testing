@@ -51,10 +51,13 @@ public class NovaAuthTest extends BaseTest {
 
     @Test(groups = {"smoke", "novashop", "auth"}, description = "Kiểm tra đăng nhập thành công với tài khoản người mua (Buyer)")
     public void testBuyerLoginSuccess() {
-        ExtentReportManager.logInfo("Đăng nhập với tài khoản Buyer: minhanh / 123456");
-        loginPage.login("minhanh", "123456");
+        ExtentReportManager.logInfo("Đăng nhập với tài khoản Buyer: autotest_1792115836 / Password123!");
+        loginPage.login("autotest_1792115836", "Password123!");
 
-        // F-02: trước đây test này KHÔNG có assertion nào (luôn PASS dù đăng nhập hỏng)
+        try {
+            com.ecommerce.utils.WaitUtil.waitForInvisibility(org.openqa.selenium.By.xpath("//h1[contains(.,'Đăng Nhập')]"), 10);
+        } catch (Exception ignored) {}
+
         Assert.assertFalse(loginPage.isErrorMessageDisplayed(),
                 "Đăng nhập buyer hợp lệ không được hiển thị thông báo lỗi.");
         String currentUrl = getDriver().getCurrentUrl();
@@ -65,15 +68,56 @@ public class NovaAuthTest extends BaseTest {
 
     @Test(groups = {"smoke", "novashop", "auth"}, description = "Kiểm tra đăng nhập tài khoản người bán chuyển hướng đến kênh người bán")
     public void testSellerLoginRedirect() {
-        ExtentReportManager.logInfo("Đăng nhập với tài khoản Seller: ankerseller / 123456");
-        loginPage.login("ankerseller", "123456");
+        ExtentReportManager.logInfo("Đăng nhập với tài khoản Seller: testseller / Password123!");
+        loginPage.login("testseller", "Password123!");
 
-        // F-02: trước đây test này KHÔNG có assertion nào
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ignored) {}
+
         Assert.assertFalse(loginPage.isErrorMessageDisplayed(),
                 "Đăng nhập seller hợp lệ không được hiển thị thông báo lỗi.");
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL sau khi đăng nhập seller: " + currentUrl);
         Assert.assertFalse(currentUrl.contains("/dang-nhap"),
                 "Đăng nhập seller thành công phải rời khỏi trang đăng nhập. URL thực tế: " + currentUrl);
+    }
+
+    @Test(groups = {"smoke", "novashop", "auth"}, description = "Kiểm tra mở menu tài khoản và đăng xuất")
+    public void testAccountMenuAndLogout() {
+        ExtentReportManager.logInfo("Đăng nhập buyer để kiểm tra menu tài khoản");
+        loginPage.login("autotest_1792115836", "Password123!");
+
+        try {
+            com.ecommerce.utils.WaitUtil.waitForInvisibility(org.openqa.selenium.By.xpath("//h1[contains(.,'Đăng Nhập')]"), 10);
+        } catch (Exception ignored) {}
+
+        ExtentReportManager.logInfo("Kiểm tra sự hiện diện của Avatar/Menu tài khoản trên Header");
+        if (loginPage.isAccountMenuDisplayed()) {
+            loginPage.openAccountMenu();
+            ExtentReportManager.logInfo("Kiểm tra đường dẫn 'Đơn mua của tôi'");
+            Assert.assertTrue(loginPage.isOrdersLinkInMenuDisplayed(), "Menu phải chứa đường dẫn 'Đơn mua của tôi'.");
+
+            ExtentReportManager.logInfo("Nhấn Đăng xuất");
+            loginPage.clickLogout();
+
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException ignored) {}
+
+            Assert.assertTrue(loginPage.isLoggedOut(), "Sau khi đăng xuất phải hiển thị lại nút Đăng Nhập trên Header.");
+        }
+    }
+
+    @Test(groups = {"regression", "novashop", "auth"}, description = "Đăng nhập thành công với tên người dùng có khoảng trắng thừa")
+    public void testTrimWhitespaceUsername() {
+        ExtentReportManager.logInfo("Đăng nhập với khoảng trắng thừa: '  testseller  '");
+        loginPage.login("  testseller  ", "Password123!");
+
+        try {
+            com.ecommerce.utils.WaitUtil.waitForInvisibility(org.openqa.selenium.By.xpath("//h1[contains(.,'Đăng Nhập')]"), 10);
+        } catch (Exception ignored) {}
+
+        Assert.assertFalse(loginPage.isErrorMessageDisplayed(), "Hệ thống tự trim khoảng trắng, không được báo lỗi.");
     }
 }

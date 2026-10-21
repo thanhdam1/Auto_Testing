@@ -111,7 +111,10 @@ public abstract class BasePage {
     protected void highlight(WebElement element) {
         try {
             JavascriptExecutor js = (JavascriptExecutor) getDriver();
-            js.executeScript("arguments[0].style.border='2px solid #28a745'", element);
+            js.executeScript("arguments[0].style.border='3px solid #ff0055'; arguments[0].style.backgroundColor='rgba(255,200,0,0.2)';", element);
+            if (!com.ecommerce.utils.ConfigReader.getBoolean("headless", false)) {
+                Thread.sleep(300);
+            }
         } catch (Exception ignored) {
             // Highlighting is a visual helper; don't fail test if script fails
         }

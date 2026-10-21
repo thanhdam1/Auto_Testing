@@ -63,6 +63,11 @@ public class BangAdminProductPage extends BasePage {
         return isDisplayed(btnNewProduct);
     }
 
+    public BangAdminProductFormPage clickNewProduct() {
+        click(btnNewProduct, "Nút Thêm sản phẩm mới");
+        return new BangAdminProductFormPage();
+    }
+
     public boolean isEmptyStateDisplayed() {
         return isDisplayed(emptyState);
     }

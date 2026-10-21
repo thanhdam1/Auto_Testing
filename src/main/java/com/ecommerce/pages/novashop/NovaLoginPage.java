@@ -10,11 +10,14 @@ public class NovaLoginPage extends BasePage {
 
     // Locators
     private final By headingLogin = By.xpath("//h1[contains(text(),'Đăng Nhập')]");
-    private final By inputUsername = By.cssSelector("form input:not([type='password'])");
-    private final By inputPassword = By.cssSelector("form input[type='password']");
+    private final By inputUsername = By.cssSelector("input[placeholder*='minhanh']");
+    private final By inputPassword = By.cssSelector("input[type='password'][placeholder*='Mật khẩu']");
     private final By btnSubmit = By.cssSelector("form button[type='submit']");
-    private final By errorMessage = By.cssSelector("form p.text-rose-600");
+    private final By errorMessage = By.cssSelector("form p.text-rose-600, form p[class*='text-rose'], form p[class*='bg-rose'], p.text-rose-600");
+    private final By errorMessageFallback = By.xpath("//form//p | //*[contains(text(),'đầy đủ') or contains(text(),'sai') or contains(text(),'không chính xác')]");
     private final By linkRegister = By.cssSelector("a[href='/dang-ky']");
+    private final By btnDemoMinhAnh = By.xpath("//button[contains(.,'minhanh')]");
+    private final By btnDemoAnker = By.xpath("//button[contains(.,'ankerseller')]");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingLogin);
@@ -39,14 +42,79 @@ public class NovaLoginPage extends BasePage {
     }
 
     public boolean isErrorMessageDisplayed() {
-        return isDisplayed(errorMessage);
+        try {
+            Thread.sleep(600);
+        } catch (InterruptedException ignored) {}
+
+        try {
+            if (isDisplayed(errorMessage)) {
+                return true;
+            }
+        } catch (Exception ignored) {}
+
+        try {
+            java.util.List<org.openqa.selenium.WebElement> elements = getDriver().findElements(errorMessageFallback);
+            for (org.openqa.selenium.WebElement el : elements) {
+                if (el.isDisplayed() && !el.getText().trim().isEmpty()) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {}
+
+        return false;
     }
 
     public String getErrorMessageText() {
-        return getText(errorMessage);
+        try {
+            if (isDisplayed(errorMessage)) {
+                return getText(errorMessage);
+            }
+        } catch (Exception ignored) {}
+
+        try {
+            java.util.List<org.openqa.selenium.WebElement> elements = getDriver().findElements(errorMessageFallback);
+            for (org.openqa.selenium.WebElement el : elements) {
+                if (el.isDisplayed() && !el.getText().trim().isEmpty()) {
+                    return el.getText().trim();
+                }
+            }
+        } catch (Exception ignored) {}
+
+        return "";
     }
+
 
     public boolean isRegisterLinkDisplayed() {
         return isDisplayed(linkRegister);
+    }
+
+    // Account Menu Locators (Module 1.3 in LOCATORS.md)
+    private final By btnAccountMenu = By.cssSelector("button[aria-haspopup='menu']");
+    private final By menuItemOrders = By.xpath("//a[contains(.,'Đơn mua của tôi') or @href='/don-hang']");
+    private final By menuItemSeller = By.xpath("//a[contains(.,'Kênh Người Bán') or @href='/nguoi-ban']");
+    private final By menuItemLogout = By.xpath("//div[@role='menu']//button[contains(.,'xuất') or contains(.,'Logout') or contains(.,'thoát')] | //button[contains(.,'xuất') or contains(.,'Logout') or contains(.,'Đăng xuất')]");
+    private final By linkLoginHeader = By.cssSelector("a[href='/dang-nhap']");
+
+    public boolean isAccountMenuDisplayed() {
+        return isDisplayed(btnAccountMenu);
+    }
+
+    public void openAccountMenu() {
+        click(btnAccountMenu, "Nút mở Menu Tài Khoản");
+    }
+
+    public boolean isOrdersLinkInMenuDisplayed() {
+        return isDisplayed(menuItemOrders);
+    }
+
+    public void clickLogout() {
+        if (!isDisplayed(menuItemLogout)) {
+            openAccountMenu();
+        }
+        click(menuItemLogout, "Nút Đăng xuất");
+    }
+
+    public boolean isLoggedOut() {
+        return isDisplayed(linkLoginHeader);
     }
 }

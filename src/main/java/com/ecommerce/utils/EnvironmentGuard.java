@@ -49,7 +49,7 @@ public final class EnvironmentGuard {
             targets.add(new Target("Project 2 - ShopNova Marketplace", ConfigReader.get("novashop.app.url", "http://localhost:5173")));
         }
         if (runRepair) {
-            targets.add(new Target("Project 3 - QR Repair System", ConfigReader.get("repair.app.url", "http://localhost:5174")));
+            targets.add(new Target("Project 3 - QR Repair System", ConfigReader.get("repair.app.url", "http://localhost:5173")));
         }
         if (runAll || suite.contains("api")) {
             targets.add(new Target("Backend API (Noi That)", ConfigReader.get("api.base.url", "http://localhost:4000/api")));
@@ -75,12 +75,18 @@ public final class EnvironmentGuard {
             return ConfigReader.get("novashop.app.url", "http://localhost:5173");
         }
         if (testClassName.contains(".repair.")) {
-            return ConfigReader.get("repair.app.url", "http://localhost:5174");
+            return ConfigReader.get("repair.app.url", "http://localhost:5173");
         }
         if (testClassName.contains(".api.")) {
             return ConfigReader.get("api.base.url", "http://localhost:4000/api");
         }
         if (testClassName.contains(".noithatbang.")) {
+            if (testClassName.contains("Admin")) {
+                return ConfigReader.get("noithatbang.admin.url", "http://localhost:5173");
+            }
+            if (testClassName.contains("Api")) {
+                return ConfigReader.get("noithatbang.api.url", "http://localhost:8080/api/v1");
+            }
             return ConfigReader.get("noithatbang.app.url", "http://localhost:4321");
         }
         if (testClassName.contains(".noithat.")) {

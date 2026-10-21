@@ -51,9 +51,9 @@ public class BangStorefrontPage extends BasePage {
     private final By cartEmptyMsg = By.xpath("//p[contains(text(),'Giỏ hàng của bạn đang trống')]");
     private final By cartDrawerItems = By.cssSelector(".divide-y > div");
     private final By linkCheckoutFromDrawer = By.cssSelector("a[href='/checkout']");
-    private final By btnIncreaseCartDrawerQty = By.xpath("//div[contains(@class,'divide-y')]//button[.//*[name()='svg' and contains(@class,'lucide-plus')]]");
-    private final By btnDecreaseCartDrawerQty = By.xpath("//div[contains(@class,'divide-y')]//button[.//*[name()='svg' and contains(@class,'lucide-minus')]]");
-    private final By btnRemoveCartDrawerItem = By.xpath("//div[contains(@class,'divide-y')]//button[@title='Xóa' or .//*[name()='svg' and contains(@class,'lucide-trash')]]");
+    private final By btnIncreaseCartDrawerQty = By.xpath("//div[contains(@class,'divide-y')]//button[descendant::*[local-name()='svg' and contains(@class,'lucide-plus')]]");
+    private final By btnDecreaseCartDrawerQty = By.xpath("//div[contains(@class,'divide-y')]//button[descendant::*[local-name()='svg' and contains(@class,'lucide-minus')]]");
+    private final By btnRemoveCartDrawerItem = By.xpath("//div[contains(@class,'divide-y')]//button[@title='Xóa' or contains(@class,'text-rose') or contains(@class,'text-red') or descendant::*[local-name()='svg' and contains(@class,'lucide-trash')]]");
 
     // Showroom & Product Cards
     private final By firstProductCard = By.cssSelector("a[href*='/products/']");

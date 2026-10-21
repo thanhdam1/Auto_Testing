@@ -96,6 +96,9 @@ public abstract class BaseTest {
             if (result.getStatus() == ITestResult.FAILURE) {
                 String testName = result.getMethod().getMethodName();
                 LogUtil.error("Test FAILED: {}", testName, result.getThrowable());
+                try {
+                    ScreenshotUtil.captureToFile(testName);
+                } catch (Exception ignored) {}
                 String base64Screenshot = ScreenshotUtil.captureBase64();
                 ExtentReportManager.logFail("Test Failed: " + result.getThrowable().getMessage(), base64Screenshot);
             } else if (result.getStatus() == ITestResult.SUCCESS) {

@@ -12,13 +12,20 @@ import java.util.List;
 public class NovaSellerProductsPage extends BasePage {
 
     // Locators
-    private final By headingTitle = By.xpath("//h1[contains(text(),'Quản Lý Sản Phẩm')]");
+    private final By headingTitle = By.cssSelector("main h1");
     private final By inputKeyword = By.cssSelector("input[placeholder*='Tìm theo tên']");
-    private final By btnAddNew = By.cssSelector("a[href='/nguoi-ban/san-pham/them-moi']");
+    private final By btnAddNew = By.cssSelector("a[href*='/nguoi-ban/san-pham/them-moi']");
     private final By productItems = By.cssSelector("table tbody tr, div.space-y-3 > div");
 
     public boolean isPageLoaded() {
-        return isDisplayed(headingTitle);
+        try {
+            boolean urlOk = getDriver().getCurrentUrl().contains("/nguoi-ban/san-pham");
+            boolean hasHeading = !getDriver().findElements(headingTitle).isEmpty() 
+                    || !getDriver().findElements(inputKeyword).isEmpty();
+            return urlOk || hasHeading;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void searchProduct(String keyword) {

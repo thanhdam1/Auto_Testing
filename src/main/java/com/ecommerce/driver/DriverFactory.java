@@ -64,12 +64,20 @@ public final class DriverFactory {
 
             case CHROME:
             default:
+                if (System.getProperty("webdriver.chrome.driver") == null) {
+                    String cachedDriver = System.getProperty("user.home") + "\\.cache\\selenium\\chromedriver\\win64\\155.0.8059.79\\chromedriver.exe";
+                    if (new java.io.File(cachedDriver).exists()) {
+                        System.setProperty("webdriver.chrome.driver", cachedDriver);
+                    }
+                }
                 ChromeOptions chromeOptions = new ChromeOptions();
                 if (headless) {
                     chromeOptions.addArguments("--headless=new");
+                    chromeOptions.addArguments("--window-size=1920,1080");
+                } else {
+                    chromeOptions.addArguments("--start-maximized");
+                    chromeOptions.addArguments("--window-position=0,0");
                 }
-                chromeOptions.addArguments("--window-size=1920,1080");
-                chromeOptions.addArguments("--start-maximized");
                 chromeOptions.addArguments("--disable-notifications");
                 chromeOptions.addArguments("--disable-popup-blocking");
                 chromeOptions.addArguments("--remote-allow-origins=*");
@@ -81,7 +89,12 @@ public final class DriverFactory {
         }
 
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadTimeout));
-        driver.manage().window().maximize();
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
+        if (!headless) {
+            try {
+                driver.manage().window().maximize();
+            } catch (Exception ignored) {}
+        }
 
         return driver;
     }

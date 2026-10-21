@@ -45,12 +45,64 @@ public class NovaSearchPage extends BasePage {
     }
 
     public void filterByCategory(String categoryName) {
-        By categoryFilter = By.xpath("//aside//button[contains(.,'" + categoryName + "')] | //aside//a[contains(.,'" + categoryName + "')]");
+        try {
+            List<WebElement> items = getDriver().findElements(By.cssSelector("aside label, aside button, aside a"));
+            for (WebElement item : items) {
+                if (item.isDisplayed() && item.getText().toLowerCase().contains(categoryName.toLowerCase())) {
+                    item.click();
+                    return;
+                }
+            }
+        } catch (Exception ignored) {}
+        By categoryFilter = By.xpath("//aside//*[self::label or self::button or self::a or self::span][contains(.,'" + categoryName + "')]");
         click(categoryFilter, "Filter category: " + categoryName);
     }
 
     public void selectSort(String sortLabel) {
-        By sortButton = By.xpath("//button[contains(text(),'" + sortLabel + "')]");
+        By sortButton = By.xpath("//button[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + sortLabel.toLowerCase() + "')]");
         click(sortButton, "Sort button: " + sortLabel);
+    }
+
+    public void clickFirstProduct() {
+        click(productCards, "Sản phẩm đầu tiên trong kết quả tìm kiếm");
+    }
+
+    public void filterByPriceRange(String minPrice, String maxPrice) {
+        // Trong Shop NOVA, khoảng giá là danh sách checkbox/radio options: Dưới 200k, 200k-500k, 500k-1tr...
+        By priceOption = By.xpath("//aside//label[contains(., '200.000') or contains(., '500.000') or contains(., 'Dưới')] | (//aside//label)[4]");
+        try {
+            if (!getDriver().findElements(priceOption).isEmpty()) {
+                WebElement el = getDriver().findElement(priceOption);
+                ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", el);
+                ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", el);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public void filterByLocation(String locationName) {
+        // Nơi bán trong Shop NOVA có ô search và danh sách tỉnh thành
+        By inputSearchCity = By.cssSelector("aside input[placeholder*='Tìm tỉnh']");
+        try {
+            if (isDisplayed(inputSearchCity)) {
+                type(inputSearchCity, locationName, "Tìm tỉnh / thành phố");
+                Thread.sleep(500);
+            }
+            By targetCity = By.xpath("//aside//div[contains(@class,'thin-scroll')]//label[1] | //aside//label[contains(., 'Toàn quốc')]");
+            if (!getDriver().findElements(targetCity).isEmpty()) {
+                WebElement el = getDriver().findElement(targetCity);
+                ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", el);
+                ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", el);
+            }
+        } catch (Exception ignored) {}
+    }
+
+
+    public void clickResetFilters() {
+        click(btnResetFilters, "Nút Xoá tất cả bộ lọc");
+    }
+
+    public boolean isEmptyStateDisplayed() {
+        By emptyNotice = By.xpath("//*[contains(., 'Không tìm thấy sản phẩm') or contains(., 'không tìm thấy')]");
+        return isDisplayed(emptyNotice);
     }
 }

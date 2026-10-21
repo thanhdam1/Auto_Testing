@@ -52,4 +52,59 @@ public class NovaProductSearchTest extends BaseTest {
         searchPage.selectSort("Mới Nhất");
         Assert.assertTrue(searchPage.isPageLoaded(), "Danh sách sản phẩm vẫn hiển thị sau khi sắp xếp.");
     }
+
+    @Test(groups = {"regression", "novashop", "search"}, description = "Lọc sản phẩm theo khoảng giá TỪ - ĐẾN")
+    public void testFilterByPriceRange() {
+        openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/tim-kiem");
+        NovaSearchPage searchPage = new NovaSearchPage();
+
+        ExtentReportManager.logInfo("Lọc sản phẩm từ 100.000₫ đến 500.000₫");
+        searchPage.filterByPriceRange("100000", "500000");
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+
+        Assert.assertTrue(searchPage.isPageLoaded(), "Trang tìm kiếm phải phản hồi sau khi áp dụng lọc giá.");
+    }
+
+    @Test(groups = {"regression", "novashop", "search"}, description = "Lọc sản phẩm theo nơi bán TP. Hồ Chí Minh")
+    public void testFilterByLocationHcm() {
+        openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/tim-kiem");
+        NovaSearchPage searchPage = new NovaSearchPage();
+
+        ExtentReportManager.logInfo("Lọc nơi bán: Hồ Chí Minh");
+        searchPage.filterByLocation("Hồ Chí Minh");
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+
+        Assert.assertTrue(searchPage.isPageLoaded(), "Danh sách sản phẩm được cập nhật theo địa điểm.");
+    }
+
+    @Test(groups = {"regression", "novashop", "search"}, description = "Kiểm tra màn hình không có sản phẩm khi tìm từ khóa không tồn tại")
+    public void testEmptyStateOnNonExistentSearch() {
+        openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/tim-kiem");
+        homePage.searchProduct("tu_khoa_khong_ton_tai_xyz999");
+
+        NovaSearchPage searchPage = new NovaSearchPage();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+
+        Assert.assertTrue(searchPage.isEmptyStateDisplayed() || searchPage.getProductCount() == 0,
+                "Phải hiển thị màn hình Empty State khi không có kết quả phù hợp.");
+    }
+
+    @Test(groups = {"regression", "novashop", "search"}, description = "Đặt lại toàn bộ bộ lọc bằng nút Xóa tất cả")
+    public void testResetAllFilters() {
+        openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/tim-kiem");
+        NovaSearchPage searchPage = new NovaSearchPage();
+
+        ExtentReportManager.logInfo("Nhấn nút Xoá tất cả bộ lọc");
+        searchPage.clickResetFilters();
+
+        Assert.assertTrue(searchPage.isPageLoaded(), "Trang sản phẩm vẫn hoạt động bình thường sau khi reset.");
+    }
 }

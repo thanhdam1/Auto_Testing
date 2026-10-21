@@ -22,7 +22,7 @@ public class NovaHomePage extends BasePage {
     // Sections & Widgets
     private final By bannerSection = By.cssSelector("section, div.grid");
     private final By productCards = By.cssSelector("a[href*='/san-pham/']");
-    private final By categoryIcons = By.cssSelector("a[href*='/tim-kiem?c=']");
+    private final By categoryIcons = By.cssSelector("a[href*='/tim-kiem?category='], a[href*='/tim-kiem?c=']");
 
     public boolean isPageLoaded() {
         return isDisplayed(inputSearch);

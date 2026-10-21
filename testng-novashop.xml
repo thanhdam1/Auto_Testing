@@ -5,11 +5,15 @@
         <listener class-name="com.ecommerce.listeners.TestListener"/>
     </listeners>
 
-    <test name="ShopNova Authentication &amp; Search">
+    <test name="ShopNova Buyer &amp; Marketplace Flow">
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.ecommerce.tests.novashop.NovaAuthTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaRegisterTest"/>
             <class name="com.ecommerce.tests.novashop.NovaProductSearchTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaProductDetailTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaCartCheckoutTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaBuyerOrdersTest"/>
         </classes>
     </test>
 
@@ -17,6 +21,7 @@
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.ecommerce.tests.novashop.NovaSellerManagementTest"/>
+            <class name="com.ecommerce.tests.novashop.NovaSellerProductCRUDTest"/>
         </classes>
     </test>
 </suite>

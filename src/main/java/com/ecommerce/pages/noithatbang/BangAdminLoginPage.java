@@ -3,6 +3,9 @@ package com.ecommerce.pages.noithatbang;
 import com.ecommerce.pages.base.BasePage;
 import org.openqa.selenium.By;
 
+import java.time.Duration;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 /**
  * Page Object for Website_NoiThat Admin Login Page (/login)
  * Project: NguyenBang01/Website_NoiThat
@@ -38,6 +41,14 @@ public class BangAdminLoginPage extends BasePage {
         enterEmail(email);
         enterPassword(password);
         clickLogin();
+        try {
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(6));
+            wait.until(driver -> !driver.getCurrentUrl().contains("/login") ||
+                                 driver.findElements(serverErrorAlert).size() > 0 ||
+                                 driver.findElements(validationError).size() > 0);
+            Thread.sleep(300);
+        } catch (Exception ignored) {
+        }
     }
 
     public boolean isServerErrorDisplayed() {

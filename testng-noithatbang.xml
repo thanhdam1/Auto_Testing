@@ -5,18 +5,13 @@
         <listener class-name="com.ecommerce.listeners.TestListener"/>
     </listeners>
 
-    <test name="Website_NoiThat Go Backend API">
-        <classes>
-            <class name="com.ecommerce.tests.noithatbang.BangApiTest"/>
-        </classes>
-    </test>
-
     <test name="Website_NoiThat Storefront (Astro 4321)">
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.ecommerce.tests.noithatbang.BangStorefrontTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangStorefrontAuthDataTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangStorefrontCatalogSearchTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangCheckoutTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangCheckoutDataTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangContactDataTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangCustomerOrdersTest"/>
@@ -27,8 +22,24 @@
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="com.ecommerce.tests.noithatbang.BangAdminAuthTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminDashboardTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminCategoryTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminBrandTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangAdminProductTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminProductCRUDTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminOrderTest"/>
             <class name="com.ecommerce.tests.noithatbang.BangAdminCustomerTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminCouponTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminBannerTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminReviewTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminContactTest"/>
+            <class name="com.ecommerce.tests.noithatbang.BangAdminSettingTest"/>
+        </classes>
+    </test>
+
+    <test name="Website_NoiThat Go Backend API">
+        <classes>
+            <class name="com.ecommerce.tests.noithatbang.BangApiTest"/>
         </classes>
     </test>
 </suite>
