@@ -1,11 +1,28 @@
 name: E-Commerce Automated Regression Tests
 
 on:
-  push:
-    branches: [ main, master, develop ]
-  pull_request:
-    branches: [ main, master ]
+  # Đã tắt tự động chạy khi push/pull_request theo yêu cầu vì hệ thống web đang chạy local
+  # CI chỉ chạy khi người dùng chủ động bấm "Run workflow" trên GitHub Actions
   workflow_dispatch:
+    inputs:
+      suiteFile:
+        description: 'File test suite TestNG cần chạy'
+        required: true
+        default: 'testng.xml'
+        type: choice
+        options:
+          - testng.xml
+          - testng-all.xml
+          - testng-smoke.xml
+          - testng-api.xml
+          - testng-novashop.xml
+          - testng-repair.xml
+          - testng-noithatbang.xml
+      headless:
+        description: 'Chạy ở chế độ Headless (không mở cửa sổ trình duyệt)'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   test:
@@ -27,7 +44,7 @@ jobs:
         run: chmod +x mvnw
 
       - name: Run Test Suite
-        run: ./mvnw clean test "-DsuiteFile=testng.xml" "-Dheadless=true"
+        run: ./mvnw clean test "-DsuiteFile=${{ github.event.inputs.suiteFile || 'testng.xml' }}" "-Dheadless=${{ github.event.inputs.headless || 'true' }}"
 
       - name: Upload ExtentReports Artifacts
         if: always()
@@ -50,4 +67,3 @@ jobs:
       - name: Verify Surefire Results (CI Quality Gate)
         if: always()
         run: python3 scripts/verify_surefire_results.py target/surefire-reports/testng-results.xml
-
