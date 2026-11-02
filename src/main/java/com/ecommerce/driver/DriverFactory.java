@@ -46,6 +46,7 @@ public final class DriverFactory {
                 edgeOptions.addArguments("--window-size=1920,1080");
                 edgeOptions.addArguments("--start-maximized");
                 edgeOptions.addArguments("--disable-notifications");
+                edgeOptions.addArguments("--force-prefers-reduced-motion");
                 edgeOptions.addArguments("--remote-allow-origins=*");
                 edgeOptions.addArguments("--ignore-certificate-errors");
                 driver = new EdgeDriver(edgeOptions);
@@ -79,6 +80,7 @@ public final class DriverFactory {
                     chromeOptions.addArguments("--window-position=0,0");
                 }
                 chromeOptions.addArguments("--disable-notifications");
+                chromeOptions.addArguments("--force-prefers-reduced-motion");
                 chromeOptions.addArguments("--disable-popup-blocking");
                 chromeOptions.addArguments("--remote-allow-origins=*");
                 chromeOptions.addArguments("--ignore-certificate-errors");

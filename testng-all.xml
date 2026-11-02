@@ -10,12 +10,15 @@
         <classes>
             <class name="com.ecommerce.tests.noithat.AdminProductManagementTest"/>
             <class name="com.ecommerce.tests.noithat.AdminOrderManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminImportManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminCashbookManagementTest"/>
         </classes>
     </test>
 
     <test name="Project 1: Noi That Storefront">
         <classes>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontForgotPasswordTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
             <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
             <class name="com.ecommerce.tests.noithat.ProductDetailTest"/>

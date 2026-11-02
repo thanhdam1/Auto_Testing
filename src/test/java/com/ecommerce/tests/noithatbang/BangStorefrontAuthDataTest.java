@@ -95,10 +95,9 @@ public class BangStorefrontAuthDataTest extends BaseTest {
         storefrontPage.switchAuthTab("login");
         storefrontPage.clickForgotPassword();
 
-        boolean toastShown = storefrontPage.isToastDisplayed();
-        String toastText = storefrontPage.getToastText();
-        ExtentReportManager.logInfo("Quên mật khẩu - Toast hiển thị: " + toastShown + " - " + toastText);
-        Assert.assertTrue(toastShown || toastText.contains("0931.883.988") || toastText.contains("hotline"),
-                "Hệ thống phải hiển thị hướng dẫn hotline cấp lại mật khẩu");
+        boolean isForgotTab = getDriver().getPageSource().contains("Khôi phục mật khẩu") 
+                || getDriver().getPageSource().contains("Lấy lại mật khẩu")
+                || storefrontPage.isToastDisplayed();
+        Assert.assertTrue(isForgotTab, "Hệ thống phải hiển thị form khôi phục mật khẩu qua Email / OTP");
     }
 }

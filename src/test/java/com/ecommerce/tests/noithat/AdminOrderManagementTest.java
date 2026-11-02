@@ -35,7 +35,10 @@ public class AdminOrderManagementTest extends BaseTest {
 
     @Test(groups = {"regression", "admin", "orders"}, description = "Tìm kiếm đơn hàng theo mã đơn hàng")
     public void testSearchOrderByCode() {
-        String orderCode = "NT-202610-001";
+        String orderCode = orderPage.getFirstOrderCode();
+        if (orderCode == null || orderCode.isBlank()) {
+            orderCode = "NT-2610";
+        }
         ExtentReportManager.logInfo("Tìm kiếm theo mã đơn hàng: " + orderCode);
         orderPage.searchOrder(orderCode);
 

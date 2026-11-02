@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -38,6 +39,10 @@ public class BangAdminCategoryPage extends BasePage {
         return isDisplayed(headingCategory) && isDisplayed(btnCreateCategory);
     }
 
+    public boolean isEmptyStateDisplayed() {
+        return getCategoryCount() == 0 || isDisplayed(By.xpath("//*[contains(text(),'chưa có') or contains(text(),'không có') or contains(text(),'trống')]"));
+    }
+
     public void openCreateModal() {
         click(btnCreateCategory, "Nút Thêm danh mục");
     }
@@ -55,10 +60,12 @@ public class BangAdminCategoryPage extends BasePage {
 
     public void submitSave() {
         click(btnSave, "Nút Tạo danh mục / Lưu");
+        WaitUtil.waitForInvisibility(inputName, 10);
     }
 
     public void closeModal() {
         click(btnCancelModal, "Nút Hủy modal danh mục");
+        WaitUtil.waitForInvisibility(inputName, 5);
     }
 
     public int getCategoryCount() {

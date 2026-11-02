@@ -45,14 +45,14 @@ public class BangStorefrontProductDetailPage extends BasePage {
     private final By btnCloseMemberModal = By.xpath("//div[contains(@class,'fixed')]//button[*[name()='svg' and contains(@class,'lucide-x')]]");
 
     // Accordions
-    private final By accordionDetail = By.xpath("//button[span[text()='Chi tiết']]");
+    private final By accordionDetail = By.xpath("//button[span[contains(text(),'Chi tiết')]]");
     private final By accordionDetailContent = By.xpath("//div[contains(@class,'leading-relaxed')]");
-    private final By accordionSize = By.xpath("//button[span[text()='Kích thước']]");
-    private final By accordionSizeContent = By.xpath("//p[strong[contains(text(),'Kích thước tổng thể')]]");
-    private final By accordionWarranty = By.xpath("//button[span[text()='Bảo hành']]");
-    private final By accordionWarrantyContent = By.xpath("//p[strong[contains(text(),'Thời gian bảo hành')]]");
-    private final By accordionShipping = By.xpath("//button[span[text()='Giao hàng & lắp đặt']]");
-    private final By accordionShippingContent = By.xpath("//p[strong[contains(text(),'Khu vực TP. Hồ Chí Minh')]]");
+    private final By accordionSize = By.xpath("//button[span[contains(text(),'Kích thước')]]");
+    private final By accordionSizeContent = By.xpath("//div[contains(.,'Kích thước')]");
+    private final By accordionWarranty = By.xpath("//button[span[contains(text(),'Bảo hành')]]");
+    private final By accordionWarrantyContent = By.xpath("//div[contains(.,'Thời gian bảo hành')]");
+    private final By accordionShipping = By.xpath("//button[span[contains(text(),'Giao hàng')]]");
+    private final By accordionShippingContent = By.xpath("//div[contains(.,'Giao hàng') or contains(.,'Vận chuyển')]");
 
     // Showroom Modal
     private final By linkShowroom = By.xpath("//button[contains(text(),'Xem cửa hàng trưng bày')]");

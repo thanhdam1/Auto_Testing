@@ -34,7 +34,6 @@ public class RepairBookingTest extends BaseTest {
         ExtentReportManager.logInfo("Điền thông tin đặt lịch hẹn");
         bookingPage.fillBookingForm(fullName, phone, futureDate(3), "09:30", description);
 
-        // F-02: trước đây test này chỉ điền rồi submit mà không assert gì
         Assert.assertEquals(bookingPage.getEnteredFullName(), fullName,
                 "Ô họ tên phải giữ đúng giá trị đã nhập.");
         Assert.assertEquals(bookingPage.getEnteredPhone(), phone,
@@ -43,21 +42,30 @@ public class RepairBookingTest extends BaseTest {
                 "Ô mô tả lỗi phải giữ đúng giá trị đã nhập.");
     }
 
-    @Test(groups = {"regression", "repair", "booking"}, description = "Submit form hợp lệ phải có phản hồi từ hệ thống (thành công hoặc thông báo)")
-    public void testSubmitBookingWithValidDataShowsFeedback() {
-        ExtentReportManager.logInfo("Điền form hợp lệ với ngày hẹn trong tương lai rồi submit");
-        bookingPage.fillBookingForm(
-                "Nguyễn Thị Hoa",
-                "0912345678",
-                futureDate(3),
-                "14:00",
-                "Máy in không nhận giấy và báo lỗi đèn đỏ liên tục."
-        );
+    @Test(groups = {"smoke", "repair", "booking"}, description = "Submit form đặt lịch hợp lệ: hệ thống phải lưu lịch hẹn và hiển thị màn hình đặt lịch thành công")
+    public void testSubmitBookingSuccess() {
+        long timestamp = System.currentTimeMillis();
+        String customerName = "Khách Hàng Test " + (timestamp % 10000);
+        String phone = "09" + String.format("%08d", (timestamp % 100000000));
+        String description = "Máy tính bàn khởi động không lên nguồn sau sự cố điện áp.";
 
+        ExtentReportManager.logInfo("Điền form hợp lệ với ngày hẹn tương lai rồi thực hiện submit");
+        bookingPage.fillBookingForm(customerName, phone, futureDate(3), "10:00", description);
         bookingPage.submitBooking();
 
-        Assert.assertTrue(bookingPage.hasSubmitFeedback(),
-                "Sau khi submit, hệ thống phải hiển thị màn hình đặt lịch thành công hoặc thông báo lỗi/validate.");
+        Assert.assertTrue(bookingPage.isBookingSuccessDisplayed(),
+                "Sau khi submit form hợp lệ, hệ thống phải lưu lịch hẹn và hiển thị màn hình 'Đặt lịch thành công!'.");
+    }
+
+    @Test(groups = {"regression", "repair", "booking"}, description = "Submit form khi để trống trường bắt buộc: hệ thống phải validate và không được tạo phiếu thành công")
+    public void testSubmitBookingValidationRejectsMissingFields() {
+        ExtentReportManager.logInfo("Submit form khi để trống toàn bộ thông tin bắt buộc");
+        bookingPage.submitBooking();
+
+        Assert.assertFalse(bookingPage.isBookingSuccessVisibleNow(),
+                "Hệ thống không được hiển thị màn hình thành công khi form còn để trống.");
+        Assert.assertTrue(bookingPage.hasNativeValidationMessage(),
+                "Trình duyệt/hệ thống phải kích hoạt validation message cho các trường bắt buộc.");
     }
 
     /**

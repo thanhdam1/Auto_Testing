@@ -4,6 +4,7 @@ import com.ecommerce.base.BaseTest;
 import com.ecommerce.pages.novashop.NovaBuyerOrdersPage;
 import com.ecommerce.pages.novashop.NovaLoginPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.WaitUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,10 +18,7 @@ public class NovaBuyerOrdersTest extends BaseTest {
         openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/dang-nhap");
         NovaLoginPage loginPage = new NovaLoginPage();
         loginPage.login("autotest_1792115836", "Password123!");
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlNotContains("/dang-nhap", 10);
 
         openUrl(com.ecommerce.utils.ConfigReader.get("novashop.app.url", "https://novashop-web-delta.vercel.app") + "/don-hang");
         ordersPage = new NovaBuyerOrdersPage();
@@ -61,10 +59,6 @@ public class NovaBuyerOrdersTest extends BaseTest {
     public void testCancelPendingOrderIfAvailable() {
         ExtentReportManager.logInfo("Chuyển tới tab 'Chờ xác nhận'");
         ordersPage.filterByTab("Chờ xác nhận");
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
 
         org.openqa.selenium.By btnCancel = org.openqa.selenium.By.xpath("//button[contains(., 'Hủy đơn hàng') or contains(., 'Hủy đơn')]");
         if (!getDriver().findElements(btnCancel).isEmpty()) {

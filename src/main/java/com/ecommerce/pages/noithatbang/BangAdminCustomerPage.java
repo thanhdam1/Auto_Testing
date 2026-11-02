@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -40,9 +41,9 @@ public class BangAdminCustomerPage extends BasePage {
 
     public void searchCustomer(String keyword) {
         type(inputSearch, keyword, "Ô tìm kiếm khách hàng: " + keyword);
-        try {
-            Thread.sleep(400); // UI client filter debounce/render
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
+                .filter(WebElement::isDisplayed)
+                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
     }
 
     public int getCustomerCount() {

@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -50,10 +51,12 @@ public class BangAdminBrandPage extends BasePage {
 
     public void submitSave() {
         click(btnSave, "Nút Lưu thương hiệu");
+        WaitUtil.waitForInvisibility(inputName, 10);
     }
 
     public void closeModal() {
         click(btnCancelModal, "Nút Hủy modal thương hiệu");
+        WaitUtil.waitForInvisibility(inputName, 5);
     }
 
     public boolean hasBrands() {

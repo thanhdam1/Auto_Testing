@@ -42,10 +42,6 @@ public class NovaSellerProductCRUDTest extends BaseTest {
         ExtentReportManager.logInfo("Điền thông tin sản phẩm mới: " + testProductName);
         addProductPage.fillAndSubmitProduct(testProductName, price, stock, description);
 
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {}
-
         NovaSellerProductsPage productsPage = new NovaSellerProductsPage();
         ExtentReportManager.logInfo("Kiểm tra điều hướng về trang quản lý sản phẩm");
         Assert.assertTrue(productsPage.isPageLoaded(), "Sau khi thêm sản phẩm phải chuyển về danh sách sản phẩm.");
@@ -73,10 +69,6 @@ public class NovaSellerProductCRUDTest extends BaseTest {
         
         ExtentReportManager.logInfo("Submit form đăng sản phẩm chi tiết");
         addProductPage.clickSave();
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {}
 
         NovaSellerProductsPage productsPage = new NovaSellerProductsPage();
         Assert.assertTrue(productsPage.isPageLoaded(), "Sau khi đăng sản phẩm phải chuyển về danh sách sản phẩm.");

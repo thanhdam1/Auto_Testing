@@ -25,19 +25,27 @@ public class RepairAdminBoundaryTest extends BaseTest {
             dataProvider = "repairAdminTicketSearchBoundaries",
             dataProviderClass = RepairBoundaryDataProviders.class)
     public void adminTicketSearchHandlesBoundaryQueries(
-            String caseName, String query, int expectedRowCount) {
+            String caseName, String query, String expectedResult) {
         dashboardPage.selectTicketsTab();
+        int initialCount = dashboardPage.getTicketDataRowCount();
         dashboardPage.searchTickets(query);
 
         Assert.assertEquals(
                 dashboardPage.getTicketSearchValue(),
                 query,
                 "Giá trị tìm kiếm phải được giữ nguyên cho case " + caseName);
-        Assert.assertEquals(
-                dashboardPage.getTicketDataRowCount(),
-                expectedRowCount,
-                "Số dòng kết quả không đúng cho case " + caseName);
-        if (expectedRowCount == 0) {
+
+        int currentCount = dashboardPage.getTicketDataRowCount();
+        if ("all".equals(expectedResult)) {
+            Assert.assertEquals(
+                    currentCount,
+                    initialCount,
+                    "Số dòng kết quả tìm kiếm rỗng/khoảng trắng phải giữ nguyên cho case " + caseName);
+        } else if ("none".equals(expectedResult)) {
+            Assert.assertEquals(
+                    currentCount,
+                    0,
+                    "Số dòng kết quả không đúng cho query không tồn tại " + caseName);
             Assert.assertTrue(
                     dashboardPage.isTicketNoResultsDisplayed(),
                     "UI phải hiển thị trạng thái không có kết quả cho case " + caseName);
@@ -95,7 +103,7 @@ public class RepairAdminBoundaryTest extends BaseTest {
                 dashboardPage.isSaveSoftwareButtonDisabled(),
                 "Nút lưu phải bị khóa khi chưa chọn phiếu và package.");
 
-        dashboardPage.selectSoftwareTicket("RP-512806 — Khach Test Booking (CHỜ KHÁM)");
+        dashboardPage.selectFirstAvailableSoftwareTicket();
         dashboardPage.selectSoftwareGroup("Windows");
 
         Assert.assertTrue(

@@ -40,9 +40,6 @@ public class BangAdminBrandTest extends BaseTest {
         brandPage.openCreateModal();
         Assert.assertTrue(brandPage.isModalOpen(), "Modal thêm thương hiệu phải mở ra");
         brandPage.closeModal();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(brandPage.isModalOpen(), "Modal phải đóng khi bấm Hủy");
     }
 
@@ -55,10 +52,6 @@ public class BangAdminBrandTest extends BaseTest {
         ExtentReportManager.logInfo("Tạo thương hiệu mới: " + brandName);
         brandPage.fillBrandForm(brandName, brandSlug);
         brandPage.submitSave();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(brandPage.isModalOpen(), "Modal phải đóng lại sau khi lưu thành công");
     }
 

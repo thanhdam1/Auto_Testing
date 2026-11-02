@@ -93,6 +93,62 @@ public class RepairAdminDashboardPage extends BasePage {
         tab.click();
     }
 
+    public boolean isTabActive(int index) {
+        try {
+            List<WebElement> tabs = findAll(managementTabs);
+            if (tabs.size() > index) {
+                String classes = tabs.get(index).getAttribute("class");
+                String ariaSelected = tabs.get(index).getAttribute("aria-selected");
+                return "true".equalsIgnoreCase(ariaSelected)
+                        || (classes != null && (classes.contains("border-") || classes.contains("active") || classes.contains("bg-")));
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    public boolean isBookingsContentDisplayed() {
+        return isTicketTableDisplayed() || isTicketNoResultsDisplayed()
+                || getDriver().findElements(By.xpath("//*[contains(text(),'lịch hẹn') or contains(text(),'Lịch hẹn')]")).size() > 0;
+    }
+
+    public String getFirstVisibleTicketCode() {
+        try {
+            List<WebElement> rows = getDriver().findElements(tableRows);
+            for (WebElement row : rows) {
+                if (row.findElements(noTicketResultCell).isEmpty()) {
+                    List<WebElement> cells = row.findElements(By.cssSelector("td"));
+                    if (!cells.isEmpty()) {
+                        String text = cells.get(0).getText().trim();
+                        if (!text.isEmpty()) {
+                            return text;
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return null;
+    }
+
+    public boolean allVisibleRowsContain(String query) {
+        try {
+            List<WebElement> rows = getDriver().findElements(tableRows);
+            List<WebElement> dataRows = rows.stream()
+                    .filter(row -> row.findElements(noTicketResultCell).isEmpty())
+                    .toList();
+            if (dataRows.isEmpty()) {
+                return false;
+            }
+            for (WebElement row : dataRows) {
+                if (!row.getText().toLowerCase().contains(query.toLowerCase())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean isNotificationCenterDisplayed() {
         return isDisplayed(notificationCenter);
     }
@@ -172,6 +228,15 @@ public class RepairAdminDashboardPage extends BasePage {
 
     public void selectSoftwareTicket(String ticketText) {
         selectDropdownByVisibleText(softwareTicketSelect, ticketText, "Phiếu sửa chữa phần mềm");
+    }
+
+    public void selectFirstAvailableSoftwareTicket() {
+        try {
+            org.openqa.selenium.support.ui.Select select = new org.openqa.selenium.support.ui.Select(find(softwareTicketSelect));
+            if (select.getOptions().size() > 1) {
+                select.selectByIndex(1);
+            }
+        } catch (Exception ignored) {}
     }
 
     public void selectSoftwareGroup(String groupText) {

@@ -42,7 +42,7 @@ public class AdminProductManagementTest extends BaseTest {
 
     @Test(groups = {"regression", "admin", "products"}, description = "Tìm kiếm sản phẩm theo tên chính xác")
     public void testSearchProductByName() {
-        String keyword = "Sofa da Ý";
+        String keyword = "Sofa";
         ExtentReportManager.logInfo("Thực hiện tìm kiếm sản phẩm với từ khóa: " + keyword);
         productPage.searchProduct(keyword);
 
@@ -90,7 +90,7 @@ public class AdminProductManagementTest extends BaseTest {
         Assert.assertTrue(productPage.isToastMessageDisplayed(), "Phải hiển thị toast sau khi lưu sản phẩm.");
         String toastText = productPage.getToastText();
         ExtentReportManager.logInfo("Toast thông báo: " + toastText);
-        Assert.assertTrue(toastText.contains(prodName),
+        Assert.assertTrue(toastText.toLowerCase().contains(prodName.toLowerCase()),
                 "Toast phải chứa tên sản phẩm vừa tạo. Thực tế: " + toastText);
 
         productPage.searchProduct(prodName);

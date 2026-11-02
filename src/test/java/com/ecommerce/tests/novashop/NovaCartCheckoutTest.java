@@ -7,6 +7,7 @@ import com.ecommerce.pages.novashop.NovaLoginPage;
 import com.ecommerce.pages.novashop.NovaProductDetailPage;
 import com.ecommerce.pages.novashop.NovaSearchPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.WaitUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -41,18 +42,11 @@ public class NovaCartCheckoutTest extends BaseTest {
         ExtentReportManager.logInfo("Nhấn 'Mua Ngay' để đưa sản phẩm vào giỏ");
         cartPage = productPage.clickBuyNow();
 
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(cartPage.isPageLoaded(), "Phải ở trang Giỏ hàng.");
 
         ExtentReportManager.logInfo("Nhấn 'Mua Hàng' để sang trang Đặt Hàng (Checkout)");
         NovaCheckoutPage checkoutPage = cartPage.clickCheckout();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlContains("/dat-hang", 10);
 
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL sau khi nhấn Mua Hàng: " + currentUrl);
@@ -114,16 +108,10 @@ public class NovaCartCheckoutTest extends BaseTest {
 
         NovaProductDetailPage productPage = new NovaProductDetailPage();
         cartPage = productPage.clickBuyNow();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        Assert.assertTrue(cartPage.isPageLoaded(), "Phải chuyển đến giỏ hàng sau khi mua ngay.");
 
         NovaCheckoutPage checkoutPage = cartPage.clickCheckout();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlContains("/dat-hang", 10);
 
         if (checkoutPage.isPageLoaded()) {
             ExtentReportManager.logInfo("Chọn phương thức thanh toán COD");
@@ -133,11 +121,9 @@ public class NovaCartCheckoutTest extends BaseTest {
             checkoutPage.applyVoucher20k();
 
             ExtentReportManager.logInfo("Nhấn nút 'Đặt Hàng'");
+            String checkoutUrl = getDriver().getCurrentUrl();
             checkoutPage.clickPlaceOrder();
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ignored) {}
+            WaitUtil.waitForUrlChange(checkoutUrl, 15);
 
             String currentUrl = getDriver().getCurrentUrl();
             ExtentReportManager.logInfo("URL sau khi đặt hàng: " + currentUrl);
@@ -154,10 +140,7 @@ public class NovaCartCheckoutTest extends BaseTest {
 
         NovaProductDetailPage productPage = new NovaProductDetailPage();
         cartPage = productPage.clickBuyNow();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        Assert.assertTrue(cartPage.isPageLoaded(), "Phải chuyển đến giỏ hàng sau khi mua ngay.");
 
         NovaCheckoutPage checkoutPage = cartPage.clickCheckout();
         if (checkoutPage.isPageLoaded()) {

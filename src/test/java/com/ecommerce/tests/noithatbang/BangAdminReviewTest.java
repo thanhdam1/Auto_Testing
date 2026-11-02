@@ -40,12 +40,14 @@ public class BangAdminReviewTest extends BaseTest {
         reviewsPage.filterByStatus("pending");
         int pendingCount = reviewsPage.getReviewsCount();
         ExtentReportManager.logInfo("Số đánh giá chờ duyệt: " + pendingCount);
-        Assert.assertTrue(pendingCount >= 0, "Lọc trạng thái chờ duyệt phản hồi tốt");
+        Assert.assertTrue(reviewsPage.isPageLoaded() && (pendingCount > 0 || reviewsPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái chờ duyệt phản hồi tốt");
 
         reviewsPage.filterByStatus("approved");
         int approvedCount = reviewsPage.getReviewsCount();
         ExtentReportManager.logInfo("Số đánh giá đã duyệt: " + approvedCount);
-        Assert.assertTrue(approvedCount >= 0, "Lọc trạng thái đã duyệt phản hồi tốt");
+        Assert.assertTrue(reviewsPage.isPageLoaded() && (approvedCount > 0 || reviewsPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái đã duyệt phản hồi tốt");
     }
 
     @Test(description = "WNT_RVW_003: Tìm kiếm đánh giá theo từ khóa sản phẩm")
@@ -53,7 +55,8 @@ public class BangAdminReviewTest extends BaseTest {
         reviewsPage.searchReview("sofa");
         int count = reviewsPage.getReviewsCount();
         ExtentReportManager.logInfo("Kết quả tìm kiếm đánh giá: " + count);
-        Assert.assertTrue(count >= 0, "Tìm kiếm đánh giá hoạt động tốt");
+        Assert.assertTrue(reviewsPage.isPageLoaded() && (count > 0 || reviewsPage.isEmptyStateDisplayed()),
+                "Tìm kiếm đánh giá hoạt động tốt");
     }
 
     @Test(description = "WNT_RVW_004: Kiểm tra hiển thị cột trong bảng đánh giá")

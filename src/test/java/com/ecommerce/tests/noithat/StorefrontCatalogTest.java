@@ -25,6 +25,9 @@ public class StorefrontCatalogTest extends BaseTest {
         Assert.assertTrue(catalogPage.isPageLoaded(), "Trang Danh mục sản phẩm phải hiển thị tiêu đề hợp lệ.");
 
         int count = catalogPage.getVisibleProductCount();
+        if (count == 0) {
+            count = catalogPage.waitForAnyVisibleProductCount();
+        }
         ExtentReportManager.logInfo("Số sản phẩm hiển thị trên trang: " + count);
         Assert.assertTrue(count > 0, "Trang danh mục phải hiển thị danh sách sản phẩm.");
     }
@@ -56,6 +59,9 @@ public class StorefrontCatalogTest extends BaseTest {
         catalogPage.selectSortOption("price-asc");
 
         int count = catalogPage.getVisibleProductCount();
+        if (count == 0) {
+            count = catalogPage.waitForAnyVisibleProductCount();
+        }
         Assert.assertTrue(count > 0, "Danh sách vẫn phải hiển thị sau khi sắp xếp.");
     }
 }

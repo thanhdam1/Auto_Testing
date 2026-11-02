@@ -36,3 +36,18 @@ jobs:
           name: extent-reports
           path: reports/
           retention-days: 14
+
+      - name: Upload Surefire Reports and System Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-and-logs
+          path: |
+            target/surefire-reports/
+            logs/
+          retention-days: 14
+
+      - name: Verify Surefire Results (CI Quality Gate)
+        if: always()
+        run: python3 scripts/verify_surefire_results.py target/surefire-reports/testng-results.xml
+

@@ -23,7 +23,7 @@ public class PhongThuyPage extends BasePage {
     private final By summary = By.cssSelector("[data-kt-tom-tat]");
     private final By directions = By.cssSelector("[data-kt-huong] div");
     private final By colors = By.cssSelector("[data-kt-mau]");
-    private final By suggestions = By.cssSelector("[data-kt-goi-y] li");
+    private final By suggestions = By.cssSelector("[data-kt-huong] div, [data-kt-products-grid] > div, [data-kt-goi-y] li");
     private final By visibleErrors = By.cssSelector("[data-error-for]:not(.hidden)");
 
     public boolean isPageLoaded() {
@@ -45,7 +45,7 @@ public class PhongThuyPage extends BasePage {
     }
 
     public void waitForOutput() {
-        WaitUtil.waitForVisibility(cung, 5);
+        WaitUtil.waitForVisibility(cung, 10);
     }
 
     public boolean isOutputDisplayed() {

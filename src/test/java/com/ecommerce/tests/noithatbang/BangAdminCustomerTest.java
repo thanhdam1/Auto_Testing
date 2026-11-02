@@ -36,7 +36,8 @@ public class BangAdminCustomerTest extends BaseTest {
     @Test(description = "WNT_CUST_002: Tìm kiếm khách hàng theo từ khóa")
     public void testSearchCustomerByKeyword() {
         customerPage.searchCustomer("admin");
-        Assert.assertTrue(customerPage.getCustomerCount() >= 0, "Bảng danh sách khách hàng phải phản hồi kết quả lọc");
+        Assert.assertTrue(customerPage.isPageLoaded() && (customerPage.getCustomerCount() > 0 || customerPage.isEmptyStateDisplayed()),
+                "Bảng danh sách khách hàng phải phản hồi kết quả lọc hợp lệ");
     }
 
     @Test(description = "WNT_CUST_003: Tìm kiếm khách hàng với từ khóa không tồn tại hiển thị trạng thái rỗng")

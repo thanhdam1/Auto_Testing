@@ -149,11 +149,25 @@ public class CartPage extends BasePage {
 
     public void increaseItemQuantity(String slug) {
         By btnUp = By.cssSelector("[data-row='" + slug + "'] [data-row-up]");
+        try {
+            WebElement btn = getDriver().findElement(btnUp);
+            if (btn.getAttribute("disabled") != null) {
+                LogUtil.info("Nút tăng số lượng đã bị disabled tại biên trên (maxStock)");
+                return;
+            }
+        } catch (Exception ignored) {}
         click(btnUp, "Tăng số lượng sản phẩm: " + slug);
     }
 
     public void decreaseItemQuantity(String slug) {
         By btnDown = By.cssSelector("[data-row='" + slug + "'] [data-row-down]");
+        try {
+            WebElement btn = getDriver().findElement(btnDown);
+            if (btn.getAttribute("disabled") != null) {
+                LogUtil.info("Nút giảm số lượng đã bị disabled tại biên dưới (1)");
+                return;
+            }
+        } catch (Exception ignored) {}
         click(btnDown, "Giảm số lượng sản phẩm: " + slug);
     }
 

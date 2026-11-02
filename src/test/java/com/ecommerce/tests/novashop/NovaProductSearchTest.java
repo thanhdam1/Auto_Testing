@@ -61,10 +61,6 @@ public class NovaProductSearchTest extends BaseTest {
         ExtentReportManager.logInfo("Lọc sản phẩm từ 100.000₫ đến 500.000₫");
         searchPage.filterByPriceRange("100000", "500000");
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(searchPage.isPageLoaded(), "Trang tìm kiếm phải phản hồi sau khi áp dụng lọc giá.");
     }
 
@@ -76,10 +72,6 @@ public class NovaProductSearchTest extends BaseTest {
         ExtentReportManager.logInfo("Lọc nơi bán: Hồ Chí Minh");
         searchPage.filterByLocation("Hồ Chí Minh");
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(searchPage.isPageLoaded(), "Danh sách sản phẩm được cập nhật theo địa điểm.");
     }
 
@@ -89,10 +81,6 @@ public class NovaProductSearchTest extends BaseTest {
         homePage.searchProduct("tu_khoa_khong_ton_tai_xyz999");
 
         NovaSearchPage searchPage = new NovaSearchPage();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(searchPage.isEmptyStateDisplayed() || searchPage.getProductCount() == 0,
                 "Phải hiển thị màn hình Empty State khi không có kết quả phù hợp.");
     }

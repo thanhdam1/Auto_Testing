@@ -4,6 +4,7 @@ import com.ecommerce.base.BaseTest;
 import com.ecommerce.pages.novashop.NovaHomePage;
 import com.ecommerce.pages.novashop.NovaLoginPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.WaitUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -70,10 +71,7 @@ public class NovaAuthTest extends BaseTest {
     public void testSellerLoginRedirect() {
         ExtentReportManager.logInfo("Đăng nhập với tài khoản Seller: testseller / Password123!");
         loginPage.login("testseller", "Password123!");
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlNotContains("/dang-nhap", 10);
 
         Assert.assertFalse(loginPage.isErrorMessageDisplayed(),
                 "Đăng nhập seller hợp lệ không được hiển thị thông báo lỗi.");
@@ -100,10 +98,6 @@ public class NovaAuthTest extends BaseTest {
 
             ExtentReportManager.logInfo("Nhấn Đăng xuất");
             loginPage.clickLogout();
-
-            try {
-                Thread.sleep(1500);
-            } catch (InterruptedException ignored) {}
 
             Assert.assertTrue(loginPage.isLoggedOut(), "Sau khi đăng xuất phải hiển thị lại nút Đăng Nhập trên Header.");
         }

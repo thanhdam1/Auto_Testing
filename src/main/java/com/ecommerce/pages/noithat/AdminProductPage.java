@@ -4,6 +4,7 @@ import com.ecommerce.pages.base.BasePage;
 import com.ecommerce.utils.LogUtil;
 import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -107,7 +108,14 @@ public class AdminProductPage extends BasePage {
     }
 
     public void searchProduct(String keyword) {
-        type(inputSearch, keyword, "Ô tìm kiếm sản phẩm");
+        WebElement el = find(inputSearch);
+        el.clear();
+        el.sendKeys(keyword);
+        ((JavascriptExecutor) getDriver()).executeScript(
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", el);
+        WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
+                .filter(WebElement::isDisplayed)
+                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
     }
 
     public void clearSearch() {

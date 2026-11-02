@@ -144,14 +144,17 @@ public class CartTest extends BaseTest {
     @Test(groups = {"boundary", "regression", "storefront", "cart"}, priority = 6,
             description = "NT-C06: Số lượng bị kẹp ở mức tối đa 99 (biên trên theo scripts/cart.ts)")
     public void testQuantityIsCappedAtMaxNinetyNine() {
-        seedSingle(SLUG_DEN, NAME_DEN, PRICE_DEN, MAX_QUANTITY - 1);
+        String slugMock = "den-decor-test-99";
+        String nameMock = "Đèn decor test 99";
+        long priceMock = 500_000L;
+        seedSingle(slugMock, nameMock, priceMock, MAX_QUANTITY - 1);
         gotoCart();
 
-        cartPage.increaseItemQuantity(SLUG_DEN, 5);
+        cartPage.increaseItemQuantity(slugMock, 5);
 
-        Assert.assertEquals(cartPage.getItemQuantity(SLUG_DEN), String.valueOf(MAX_QUANTITY),
+        Assert.assertEquals(cartPage.getItemQuantity(slugMock), String.valueOf(MAX_QUANTITY),
                 "Số lượng phải bị kẹp ở 99 (Math.min(99, ...) trong scripts/cart.ts).");
-        Assert.assertEquals(cartPage.getSubtotalValue(), PRICE_DEN * MAX_QUANTITY,
+        Assert.assertEquals(cartPage.getSubtotalValue(), priceMock * MAX_QUANTITY,
                 "Tạm tính tại biên trên phải khớp đơn giá x 99.");
     }
 

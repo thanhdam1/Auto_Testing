@@ -15,6 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecommerce.listeners.TestListener;
+import org.testng.annotations.Listeners;
+
 /**
  * F-03: Bộ test tầng API cho backend Nội Thất (Express + Prisma) tại {@code api.base.url}.
  *
@@ -22,6 +25,7 @@ import java.util.Map;
  * orders (create/list/detail). Test KHÔNG cần browser. Nếu backend chưa bật, cả class được SKIP
  * với thông điệp rõ ràng thay vì fail ồn ào.</p>
  */
+@Listeners(TestListener.class)
 public class NoiThatApiTest {
 
     private ApiClient api;
@@ -55,7 +59,6 @@ public class NoiThatApiTest {
     @BeforeMethod(alwaysRun = true)
     public void checkApiAvailable() {
         if (!apiAvailable) {
-            ExtentReportManager.logSkip(skipMessage);
             throw new SkipException(skipMessage);
         }
     }

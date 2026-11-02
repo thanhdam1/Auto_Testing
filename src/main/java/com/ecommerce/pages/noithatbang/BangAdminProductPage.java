@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -28,26 +29,23 @@ public class BangAdminProductPage extends BasePage {
 
     public void searchProduct(String keyword) {
         type(inputSearch, keyword, "Tìm kiếm sản phẩm: " + keyword);
-        // Chờ debounce 400ms và fetch
-        try {
-            Thread.sleep(600);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
+                .filter(WebElement::isDisplayed)
+                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
     }
 
     public void filterByCategory(String categoryText) {
         WebElement el = find(selectCategory);
         new Select(el).selectByVisibleText(categoryText);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitUntil(driver -> categoryText.equals(
+                new Select(driver.findElement(selectCategory)).getFirstSelectedOption().getText()), 5);
     }
 
     public void filterByStatus(String statusValue) {
         WebElement el = find(selectStatus);
         new Select(el).selectByValue(statusValue);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitUntil(driver -> statusValue.equals(
+                new Select(driver.findElement(selectStatus)).getFirstSelectedOption().getAttribute("value")), 5);
     }
 
     public int getProductRowsCount() {

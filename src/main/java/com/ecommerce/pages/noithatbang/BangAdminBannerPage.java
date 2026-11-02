@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -60,10 +61,12 @@ public class BangAdminBannerPage extends BasePage {
 
     public void submitSave() {
         click(btnSave, "Nút Lưu banner");
+        WaitUtil.waitForInvisibility(inputTitle, 10);
     }
 
     public void closeModal() {
         click(btnCancelModal, "Nút Hủy modal banner");
+        WaitUtil.waitForInvisibility(inputTitle, 5);
     }
 
     public int getBannerCount() {

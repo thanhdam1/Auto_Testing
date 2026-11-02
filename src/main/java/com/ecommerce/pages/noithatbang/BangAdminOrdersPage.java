@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -45,9 +46,9 @@ public class BangAdminOrdersPage extends BasePage {
 
     public void searchOrder(String keyword) {
         type(inputSearch, keyword, "Tìm kiếm đơn hàng: " + keyword);
-        try {
-            Thread.sleep(600); // 400ms debounce
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
+                .filter(WebElement::isDisplayed)
+                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
     }
 
     public void filterByStatus(String status) {
@@ -60,9 +61,7 @@ public class BangAdminOrdersPage extends BasePage {
             default -> tabAll;
         };
         click(target, "Tab trạng thái: " + status);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForClickability(target, 5);
     }
 
     public int getOrderRowCount() {

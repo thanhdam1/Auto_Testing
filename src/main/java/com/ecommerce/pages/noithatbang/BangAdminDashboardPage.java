@@ -12,7 +12,7 @@ import org.openqa.selenium.By;
 public class BangAdminDashboardPage extends BasePage {
 
     // Sidebar navigation locators
-    private final By brandTitle = By.xpath("//aside//span[contains(text(),'NỘI THẤT ADMIN')]");
+    private final By brandTitle = By.xpath("//aside//span[contains(text(),'GÓC NHÀ ĐẸP') or contains(text(),'Quản Trị Cửa Hàng') or contains(text(),'NỘI THẤT ADMIN')]");
     private final By navDashboard = By.cssSelector("aside nav a[href='/']");
     private final By navProducts = By.cssSelector("aside nav a[href='/products']");
     private final By navCategories = By.cssSelector("aside nav a[href='/categories']");
@@ -31,8 +31,8 @@ public class BangAdminDashboardPage extends BasePage {
     // Dashboard content locators
     private final By headingDashboard = By.xpath("//h1[contains(text(),'Bảng Điều Khiển Tổng Quan')]");
     private final By statCards = By.cssSelector(".grid > div.bg-white");
-    private final By cardRevenue = By.xpath("//span[contains(text(),'Tổng doanh thu')]");
-    private final By cardOrders = By.xpath("//span[contains(text(),'Tổng đơn hàng')]");
+    private final By cardRevenue = By.xpath("//span[contains(text(),'Doanh thu')]");
+    private final By cardOrders = By.xpath("//span[contains(text(),'đơn hàng') or contains(text(),'Đơn hàng')]");
     private final By cardCustomers = By.xpath("//span[contains(text(),'Khách hàng')]");
     private final By cardProducts = By.xpath("//span[contains(text(),'Sản phẩm')]");
 
@@ -43,10 +43,10 @@ public class BangAdminDashboardPage extends BasePage {
     private final By btnRevenue30Days = By.xpath("//button[contains(.,'30 ngày')]");
 
     // Sections
-    private final By topProductsSection = By.xpath("//h2[contains(text(),'Top Sản phẩm bán chạy')]");
-    private final By recentOrdersSection = By.xpath("//h2[contains(text(),'Đơn hàng mới nhất')]");
-    private final By linkViewAllOrders = By.xpath("//a[contains(@href,'/orders') and contains(.,'Xem tất cả')]");
-    private final By lowStockSection = By.xpath("//h2[contains(text(),'Cảnh báo sắp hết hàng')]");
+    private final By topProductsSection = By.xpath("//h2[contains(text(),'Top Sản phẩm') or contains(text(),'bán chạy')]");
+    private final By recentOrdersSection = By.xpath("//h2[contains(text(),'Đơn hàng mới') or contains(text(),'mới nhất')]");
+    private final By linkViewAllOrders = By.xpath("//a[contains(@href,'/orders')]");
+    private final By lowStockSection = By.xpath("//h2[contains(text(),'Cảnh báo') or contains(text(),'tồn kho')]");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingDashboard) || isDisplayed(brandTitle);

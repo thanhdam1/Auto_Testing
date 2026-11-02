@@ -1,7 +1,9 @@
 package com.ecommerce.pages.novashop;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Page Object for ShopNova Register Page (/dang-ky)
@@ -55,6 +57,7 @@ public class NovaRegisterPage extends BasePage {
         selectRoleBuyer();
         fillRegistrationForm(fullName, username, phone, email, password, password);
         clickSubmit();
+        waitForSubmissionResult();
     }
 
     public void registerSeller(String fullName, String username, String phone, String email, String password) {
@@ -67,28 +70,37 @@ public class NovaRegisterPage extends BasePage {
             type(inputShopTagline, "Chất lượng là danh dự", "Slogan gian hàng");
         }
         clickSubmit();
+        waitForSubmissionResult();
     }
 
     public boolean isErrorMessageDisplayed() {
         try {
-            Thread.sleep(600);
-        } catch (InterruptedException ignored) {}
+            WaitUtil.waitUntil(driver -> hasVisibleError() || !driver.getCurrentUrl().contains("/dang-ky"), 5);
+        } catch (Exception ignored) {
+            // The assertion caller decides whether the missing result is a failure.
+        }
+        return hasVisibleError();
+    }
 
+    private void waitForSubmissionResult() {
         try {
-            if (isDisplayed(errorMessage)) {
+            WaitUtil.waitUntil(driver -> hasVisibleError() || !driver.getCurrentUrl().contains("/dang-ky"), 10);
+        } catch (Exception ignored) {
+            // Preserve the page state so the test assertion can report the actual outcome.
+        }
+    }
+
+    private boolean hasVisibleError() {
+        for (WebElement element : getDriver().findElements(errorMessage)) {
+            if (element.isDisplayed() && !element.getText().trim().isEmpty()) {
                 return true;
             }
-        } catch (Exception ignored) {}
-
-        try {
-            java.util.List<org.openqa.selenium.WebElement> elements = getDriver().findElements(errorMessageFallback);
-            for (org.openqa.selenium.WebElement el : elements) {
-                if (el.isDisplayed() && !el.getText().trim().isEmpty()) {
-                    return true;
-                }
+        }
+        for (WebElement element : getDriver().findElements(errorMessageFallback)) {
+            if (element.isDisplayed() && !element.getText().trim().isEmpty()) {
+                return true;
             }
-        } catch (Exception ignored) {}
-
+        }
         return false;
     }
 

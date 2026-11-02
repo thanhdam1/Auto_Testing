@@ -10,7 +10,14 @@
         <classes>
             <class name="com.ecommerce.tests.noithat.AdminProductManagementTest"/>
             <class name="com.ecommerce.tests.noithat.AdminOrderManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminCategoryManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminCustomerManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminImportManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.AdminCashbookManagementTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontHomeTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontAuthTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontRegisterTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontForgotPasswordTest"/>
             <class name="com.ecommerce.tests.noithat.StorefrontCatalogTest"/>
             <class name="com.ecommerce.tests.noithat.PhongThuyConsultationTest"/>
         </classes>
@@ -22,6 +29,7 @@
             <class name="com.ecommerce.tests.noithat.ProductDetailTest"/>
             <class name="com.ecommerce.tests.noithat.CartTest"/>
             <class name="com.ecommerce.tests.noithat.CheckoutFlowTest"/>
+            <class name="com.ecommerce.tests.noithat.StorefrontAccountTest"/>
         </classes>
     </test>
 </suite>

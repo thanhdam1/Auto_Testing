@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -40,18 +41,17 @@ public class BangAdminReviewsPage extends BasePage {
         if (isDisplayed(selectStatus)) {
             WebElement el = find(selectStatus);
             new Select(el).selectByValue(statusValue);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) {}
+            WaitUtil.waitUntil(driver -> statusValue.equals(
+                    new Select(driver.findElement(selectStatus)).getFirstSelectedOption().getAttribute("value")), 5);
         }
     }
 
     public void searchReview(String keyword) {
         if (isDisplayed(inputSearch)) {
             type(inputSearch, keyword, "Tìm kiếm đánh giá: " + keyword);
-            try {
-                Thread.sleep(600);
-            } catch (InterruptedException ignored) {}
+            WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
+                    .filter(WebElement::isDisplayed)
+                    .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
         }
     }
 

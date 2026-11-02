@@ -13,10 +13,14 @@ import org.testng.annotations.Test;
 
 import java.util.Map;
 
+import com.ecommerce.listeners.TestListener;
+import org.testng.annotations.Listeners;
+
 /**
  * API Test Suite for Website_NoiThat Go/Gin Backend (Port 8080)
  * Project: NguyenBang01/Website_NoiThat
  */
+@Listeners(TestListener.class)
 public class BangApiTest {
 
     private ApiClient healthClient;
@@ -51,7 +55,6 @@ public class BangApiTest {
     @BeforeMethod(alwaysRun = true)
     public void checkAvailable() {
         if (!apiAvailable) {
-            ExtentReportManager.logSkip(skipMessage);
             throw new SkipException(skipMessage);
         }
     }

@@ -107,6 +107,22 @@ public class CheckoutPage extends BasePage {
         }
     }
 
+    public void clearAddressForm() {
+        clearField(inputName);
+        clearField(inputPhone);
+        clearField(inputEmail);
+        clearField(inputDistrict);
+        clearField(inputAddress);
+    }
+
+    private void clearField(By locator) {
+        try {
+            WebElement el = getDriver().findElement(locator);
+            el.sendKeys(org.openqa.selenium.Keys.chord(org.openqa.selenium.Keys.CONTROL, "a"), org.openqa.selenium.Keys.BACK_SPACE);
+            ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].value = ''; arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", el);
+        } catch (Exception ignored) {}
+    }
+
     public void submitAddressForm() {
         click(btnSubmitAddress, "Nút 'Tiếp tục chọn thanh toán'");
     }

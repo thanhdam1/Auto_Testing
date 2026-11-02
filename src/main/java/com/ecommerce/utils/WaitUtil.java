@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.function.Function;
 
 public final class WaitUtil {
 
@@ -59,4 +60,21 @@ public final class WaitUtil {
     public static boolean waitForUrlContains(String fraction, int timeoutSeconds) {
         return getWait(timeoutSeconds).until(ExpectedConditions.urlContains(fraction));
     }
+
+    public static boolean waitForUrlNotContains(String fraction, int timeoutSeconds) {
+        return getWait(timeoutSeconds).until(driver -> !driver.getCurrentUrl().contains(fraction));
+    }
+
+    public static boolean waitForUrlChange(String previousUrl, int timeoutSeconds) {
+        return getWait(timeoutSeconds).until(ExpectedConditions.not(ExpectedConditions.urlToBe(previousUrl)));
+    }
+
+    /**
+     * Chờ một điều kiện tùy biến bằng polling của Selenium. Dùng cho các UI động
+     * (lọc client-side, React state, modal) thay vì dùng Thread.sleep cố định.
+     */
+    public static <T> T waitUntil(Function<WebDriver, T> condition, int timeoutSeconds) {
+        return getWait(timeoutSeconds).until(condition);
+    }
+
 }

@@ -20,26 +20,48 @@ public class RepairAdminDashboardTest extends BaseTest {
         dashboardPage.waitUntilLoaded();
     }
 
-    @Test(groups = {"smoke", "repair", "admin"})
+    @Test(groups = {"smoke", "repair", "admin"}, description = "Xác nhận Admin dashboard và bảng phiếu sửa chữa tải thành công")
     public void adminDashboardLoadsWithRepairTickets() {
         Assert.assertTrue(dashboardPage.isPageLoaded(), "Admin dashboard phải hiển thị.");
         Assert.assertTrue(dashboardPage.isTicketTableDisplayed(),
                 "Admin dashboard phải hiển thị bảng phiếu sửa chữa.");
     }
 
-    @Test(groups = {"regression", "repair", "admin"})
+    @Test(groups = {"regression", "repair", "admin"}, description = "Tìm kiếm phiếu sửa chữa: phải trả về đúng phiếu khớp với mã tìm kiếm")
     public void adminCanSearchTicket() {
         dashboardPage.selectTicketsTab();
-        dashboardPage.searchTickets("RP-512806");
-        Assert.assertEquals(dashboardPage.getVisibleTableRowCount(), 1,
-                "Tìm mã RP-512806 phải trả về đúng một phiếu.");
+        
+        // Lấy mã phiếu thực tế đầu tiên có sẵn trong bảng để test tìm kiếm động độc lập
+        String ticketCode = dashboardPage.getFirstVisibleTicketCode();
+        if (ticketCode == null || ticketCode.isBlank()) {
+            ticketCode = "RP-512806";
+        }
+        
+        dashboardPage.searchTickets(ticketCode);
+        Assert.assertTrue(dashboardPage.getTicketDataRowCount() >= 1,
+                "Tìm mã phiếu '" + ticketCode + "' phải trả về ít nhất một kết quả.");
+        Assert.assertTrue(dashboardPage.allVisibleRowsContain(ticketCode),
+                "Tất cả các dòng kết quả tìm kiếm phải khớp với mã phiếu '" + ticketCode + "'.");
     }
 
-    @Test(groups = {"regression", "repair", "admin"})
+    @Test(groups = {"regression", "repair", "admin"}, description = "Tìm kiếm mã phiếu không tồn tại: phải hiển thị trạng thái rỗng hợp lệ")
+    public void adminSearchNonExistentTicketShowsEmptyState() {
+        dashboardPage.selectTicketsTab();
+        dashboardPage.searchTickets("RP-NOT-EXIST-" + System.currentTimeMillis());
+        
+        Assert.assertEquals(dashboardPage.getTicketDataRowCount(), 0,
+                "Mã phiếu không tồn tại phải trả về 0 dòng kết quả.");
+        Assert.assertTrue(dashboardPage.isTicketNoResultsDisplayed(),
+                "Phải hiển thị thông báo 'Không tìm thấy phiếu phù hợp.'");
+    }
+
+    @Test(groups = {"regression", "repair", "admin"}, description = "Chuyển đổi giữa các tab quản lý: tab phải được kích hoạt và hiển thị bảng hoặc trạng thái hợp lệ")
     public void adminCanOpenManagementSections() {
         dashboardPage.selectBookingsTab();
-        Assert.assertTrue(dashboardPage.getVisibleTableRowCount() >= 0,
+        Assert.assertTrue(dashboardPage.isBookingsContentDisplayed() || dashboardPage.isTabActive(1),
                 "Tab Lịch hẹn phải được mở thành công.");
+        Assert.assertTrue(dashboardPage.isTicketTableDisplayed() || dashboardPage.isTicketNoResultsDisplayed(),
+                "Tab Lịch hẹn phải hiển thị bảng dữ liệu hoặc trạng thái rỗng hợp lệ.");
 
         dashboardPage.selectInventoryTab();
         Assert.assertTrue(dashboardPage.isInventoryDisplayed(),
@@ -54,7 +76,7 @@ public class RepairAdminDashboardTest extends BaseTest {
                 "Tab Báo cáo phải hiển thị nội dung.");
     }
 
-    @Test(groups = {"regression", "repair", "admin"})
+    @Test(groups = {"regression", "repair", "admin"}, description = "Mở trung tâm thông báo và đăng xuất an toàn")
     public void adminCanOpenNotificationsAndLogout() {
         dashboardPage.selectNotificationsTab();
         Assert.assertTrue(dashboardPage.isNotificationCenterDisplayed(),

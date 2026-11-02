@@ -28,6 +28,7 @@ public class BangStorefrontCatalogSearchTest extends BaseTest {
         ExtentReportManager.logInfo("Thực hiện tìm kiếm với từ khóa: '" + query + "' - Kịch bản: " + scenario);
         storefrontPage.searchProduct(query);
 
+        com.ecommerce.utils.WaitUtil.waitForUrlContains("/products", 5);
         String currentUrl = currentUrl();
         Assert.assertTrue(currentUrl.contains("/products"), "Trang phải điều hướng sang /products sau khi tìm kiếm");
         ExtentReportManager.logInfo("URL sau tìm kiếm: " + currentUrl);

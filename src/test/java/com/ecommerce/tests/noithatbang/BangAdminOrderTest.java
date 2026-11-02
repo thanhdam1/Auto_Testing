@@ -46,7 +46,8 @@ public class BangAdminOrderTest extends BaseTest {
         ordersPage.filterByStatus("pending");
         int count = ordersPage.getOrderRowCount();
         ExtentReportManager.logInfo("Số đơn Chờ xác nhận: " + count);
-        Assert.assertTrue(count >= 0, "Lọc trạng thái Pending thành công");
+        Assert.assertTrue(ordersPage.isPageLoaded() && (count > 0 || ordersPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái Pending thành công và hiển thị danh sách hoặc trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_ORD_004: Lọc đơn hàng theo trạng thái Confirmed (Đã xác nhận)")
@@ -54,7 +55,8 @@ public class BangAdminOrderTest extends BaseTest {
         ordersPage.filterByStatus("confirmed");
         int count = ordersPage.getOrderRowCount();
         ExtentReportManager.logInfo("Số đơn Đã xác nhận: " + count);
-        Assert.assertTrue(count >= 0, "Lọc trạng thái Confirmed thành công");
+        Assert.assertTrue(ordersPage.isPageLoaded() && (count > 0 || ordersPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái Confirmed thành công và hiển thị danh sách hoặc trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_ORD_005: Lọc đơn hàng theo trạng thái Shipping (Đang giao)")
@@ -62,7 +64,8 @@ public class BangAdminOrderTest extends BaseTest {
         ordersPage.filterByStatus("shipping");
         int count = ordersPage.getOrderRowCount();
         ExtentReportManager.logInfo("Số đơn Đang giao: " + count);
-        Assert.assertTrue(count >= 0, "Lọc trạng thái Shipping thành công");
+        Assert.assertTrue(ordersPage.isPageLoaded() && (count > 0 || ordersPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái Shipping thành công và hiển thị danh sách hoặc trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_ORD_006: Lọc đơn hàng theo trạng thái Delivered (Hoàn thành)")
@@ -70,7 +73,8 @@ public class BangAdminOrderTest extends BaseTest {
         ordersPage.filterByStatus("delivered");
         int count = ordersPage.getOrderRowCount();
         ExtentReportManager.logInfo("Số đơn Hoàn thành: " + count);
-        Assert.assertTrue(count >= 0, "Lọc trạng thái Delivered thành công");
+        Assert.assertTrue(ordersPage.isPageLoaded() && (count > 0 || ordersPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái Delivered thành công và hiển thị danh sách hoặc trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_ORD_007: Tìm kiếm đơn hàng theo mã đơn")
@@ -78,6 +82,7 @@ public class BangAdminOrderTest extends BaseTest {
         ordersPage.searchOrder("FS-");
         int count = ordersPage.getOrderRowCount();
         ExtentReportManager.logInfo("Kết quả tìm kiếm đơn hàng: " + count);
-        Assert.assertTrue(count >= 0, "Tìm kiếm đơn hàng hoạt động tốt");
+        Assert.assertTrue(ordersPage.isPageLoaded() && (count > 0 || ordersPage.isEmptyStateDisplayed()),
+                "Tìm kiếm đơn hàng hoạt động tốt và hiển thị danh sách hoặc trạng thái rỗng hợp lệ");
     }
 }

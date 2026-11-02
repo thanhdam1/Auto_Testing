@@ -36,6 +36,7 @@ public class BangAdminProductTest extends BaseTest {
     public void testSearchProducts() {
         BangAdminProductPage productPage = dashboardPage.navigateToProducts();
         productPage.searchProduct("Sofa");
-        Assert.assertTrue(productPage.getProductRowsCount() >= 0, "Bảng sản phẩm phải phản hồi kết quả tìm kiếm");
+        Assert.assertTrue(productPage.isPageLoaded() && (productPage.getProductRowsCount() > 0 || productPage.isEmptyStateDisplayed()),
+                "Bảng sản phẩm phải phản hồi kết quả tìm kiếm hoặc trạng thái rỗng hợp lệ");
     }
 }

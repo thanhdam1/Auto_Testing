@@ -3,6 +3,7 @@ package com.ecommerce.pages.noithat;
 import com.ecommerce.pages.base.BasePage;
 import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 /**
  * Page Object for Product Detail Page (/san-pham/:slug).
@@ -57,7 +58,22 @@ public class ProductDetailPage extends BasePage {
     }
 
     public String getStockStatusText() {
-        return getText(stockStatus);
+        try {
+            WebElement el = getDriver().findElement(By.xpath("//*[contains(text(),'Còn hàng') or contains(text(),'Hết hàng')]"));
+            if (el != null && !el.getText().isBlank()) {
+                return el.getText().trim();
+            }
+        } catch (Exception ignored) {}
+        try {
+            return getText(stockStatus);
+        } catch (Exception e) {
+            Object text = ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript(
+                "const el = document.querySelector('span.text-emerald-700, span.text-red-600') || " +
+                "Array.from(document.querySelectorAll('span, p, div')).find(e => e.textContent.includes('Còn hàng') || e.textContent.includes('Hết hàng')); " +
+                "return el ? el.textContent.trim() : '';"
+            );
+            return text != null ? text.toString().trim() : "";
+        }
     }
 
     public boolean isInStock() {

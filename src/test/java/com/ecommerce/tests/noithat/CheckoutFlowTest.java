@@ -43,9 +43,10 @@ public class CheckoutFlowTest extends BaseTest {
     }
 
     /**
-     * Nạp giỏ hàng với 1 sản phẩm rồi mở trang thanh toán.
+     * Nạp giỏ hàng với 1 sản phẩm rồi mở trang thanh toán (kèm phiên đăng nhập để qua Auth Guard).
      */
     private CheckoutPage openCheckoutWithItem(String slug, String name, long price, int qty) {
+        injectCustomerSession();
         seedCartWithSingleItem(slug, name, price, qty);
         openStorefrontPath("/thanh-toan");
         CheckoutPage checkoutPage = new CheckoutPage();
@@ -67,6 +68,7 @@ public class CheckoutFlowTest extends BaseTest {
     @Test(groups = {"negative", "smoke", "storefront", "checkout"}, priority = 1,
             description = "NT-P01: Vào trang thanh toán khi giỏ trống thì hiện thông báo chưa có sản phẩm")
     public void testCheckoutWithEmptyCartShowsEmptyState() {
+        injectCustomerSession();
         openStorefrontPath("/thanh-toan");
         CheckoutPage checkoutPage = new CheckoutPage();
 
@@ -84,6 +86,7 @@ public class CheckoutFlowTest extends BaseTest {
     public void testSubmitEmptyAddressFormShowsAllRequiredErrors() {
         CheckoutPage checkoutPage = openCheckoutWithCheapItem();
 
+        checkoutPage.clearAddressForm();
         checkoutPage.submitAddressForm();
 
         for (String field : new String[]{"fullname", "phone", "province", "district", "address"}) {
@@ -257,6 +260,7 @@ public class CheckoutFlowTest extends BaseTest {
         CheckoutPage checkoutPage = openCheckoutWithCheapItem();
         fillValidAddress(checkoutPage);
         checkoutPage.submitAddressForm();
+        checkoutPage.selectPaymentMethod("cod");
         checkoutPage.goToReviewStep();
         checkoutPage.placeOrder();
 
@@ -286,6 +290,7 @@ public class CheckoutFlowTest extends BaseTest {
         checkoutPage.fillAddressForm(customerName, VALID_PHONE, "e2e" + uniqueSuffix() + "@vidu.com",
                 "Hà Nội", VALID_DISTRICT, VALID_ADDRESS, "Đơn tạo bởi automation test");
         checkoutPage.submitAddressForm();
+        checkoutPage.selectPaymentMethod("cod");
         checkoutPage.goToReviewStep();
         checkoutPage.placeOrder();
 

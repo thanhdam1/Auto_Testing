@@ -69,11 +69,6 @@ public class NovaRegisterTest extends BaseTest {
                 "Password123!"
         );
 
-        // Chờ phản hồi hệ thống
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException ignored) {}
-
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL sau khi đăng ký: " + currentUrl);
         Assert.assertFalse(registerPage.isErrorMessageDisplayed(), "Đăng ký hợp lệ không được hiển thị lỗi.");
@@ -103,10 +98,6 @@ public class NovaRegisterTest extends BaseTest {
                 email,
                 "Password123!"
         );
-
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException ignored) {}
 
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL sau khi đăng ký người bán: " + currentUrl);

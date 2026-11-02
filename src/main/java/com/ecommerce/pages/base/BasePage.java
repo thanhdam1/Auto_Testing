@@ -28,8 +28,8 @@ public abstract class BasePage {
 
     protected void click(By locator, String elementName) {
         try {
-            WebElement element = WaitUtil.waitForClickability(locator);
             scrollToElement(locator);
+            WebElement element = WaitUtil.waitForClickability(locator);
             highlight(element);
             try {
                 element.click();
@@ -46,21 +46,84 @@ public abstract class BasePage {
     }
 
     protected void type(By locator, String text, String elementName) {
+        type(locator, text, elementName, false);
+    }
+
+    /**
+     * Nhập dữ liệu nhạy cảm (mật khẩu, OTP, token, thẻ, v.v.), tự động che chuỗi nhập trong log và báo cáo.
+     */
+    protected void typeSecure(By locator, String text, String elementName) {
+        type(locator, text, elementName, true);
+    }
+
+    /**
+     * Nhập dữ liệu với cờ chỉ định trường nhạy cảm, đồng thời tự động phát hiện ô mật khẩu qua DOM/tên trường.
+     */
+    protected void type(By locator, String text, String elementName, boolean isSensitive) {
         try {
-            WebElement element = WaitUtil.waitForVisibility(locator);
             scrollToElement(locator);
+            WebElement element = WaitUtil.waitForVisibility(locator);
             highlight(element);
             element.clear();
             element.sendKeys(text);
-            LogUtil.info("Typed '{}' into: {}", text, elementName);
-            ExtentReportManager.logInfo("Typed '<b>" + text + "</b>' into: <b>" + elementName + "</b>");
+
+            boolean sensitive = isSensitive || isSensitiveElement(element, elementName);
+            String displayVal = sensitive ? "••••••••" : text;
+
+            LogUtil.info("Typed '{}' into: {}", displayVal, elementName);
+            ExtentReportManager.logInfo("Typed '<b>" + displayVal + "</b>' into: <b>" + elementName + "</b>");
         } catch (Exception e) {
             LogUtil.error("Failed to type into element: {}", elementName, e);
             throw e;
         }
     }
 
+    private boolean isSensitiveElement(WebElement element, String elementName) {
+        if (isSensitiveKeyword(elementName)) {
+            return true;
+        }
+        try {
+            String typeAttr = element.getAttribute("type");
+            if ("password".equalsIgnoreCase(typeAttr)) {
+                return true;
+            }
+            String nameAttr = element.getAttribute("name");
+            if (isSensitiveKeyword(nameAttr)) {
+                return true;
+            }
+            String idAttr = element.getAttribute("id");
+            if (isSensitiveKeyword(idAttr)) {
+                return true;
+            }
+            String autocompleteAttr = element.getAttribute("autocomplete");
+            if (autocompleteAttr != null && autocompleteAttr.toLowerCase().contains("password")) {
+                return true;
+            }
+        } catch (Exception ignored) {
+            // Tránh vỡ luồng nếu phần tử DOM bị stale hoặc DOM không phản hồi thuộc tính
+        }
+        return false;
+    }
+
+    private boolean isSensitiveKeyword(String text) {
+        if (text == null || text.isBlank()) {
+            return false;
+        }
+        String lower = text.toLowerCase();
+        return lower.contains("password")
+                || lower.contains("passwd")
+                || lower.contains("mật khẩu")
+                || lower.contains("mat khau")
+                || lower.contains("matkhau")
+                || lower.contains("secret")
+                || lower.contains("token")
+                || lower.contains("credential")
+                || lower.contains("cvv")
+                || lower.contains("pin");
+    }
+
     protected String getText(By locator) {
+        scrollToElement(locator);
         WebElement element = WaitUtil.waitForVisibility(locator);
         highlight(element);
         return element.getText().trim();
@@ -68,13 +131,18 @@ public abstract class BasePage {
 
     protected boolean isDisplayed(By locator) {
         try {
-            return WaitUtil.waitForVisibility(locator, 5).isDisplayed();
+            WebElement element = WaitUtil.waitForVisibility(locator, 5);
+            try {
+                ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+            } catch (Exception ignored) {}
+            return element.isDisplayed();
         } catch (Exception e) {
             return false;
         }
     }
 
     protected void selectDropdownByVisibleText(By locator, String text, String dropdownName) {
+        scrollToElement(locator);
         WebElement element = WaitUtil.waitForVisibility(locator);
         Select select = new Select(element);
         select.selectByVisibleText(text);
@@ -83,6 +151,7 @@ public abstract class BasePage {
     }
 
     protected void selectDropdownByValue(By locator, String value, String dropdownName) {
+        scrollToElement(locator);
         WebElement element = WaitUtil.waitForVisibility(locator);
         Select select = new Select(element);
         select.selectByValue(value);
@@ -104,17 +173,18 @@ public abstract class BasePage {
     }
 
     protected void scrollToElement(By locator) {
-        WebElement element = WaitUtil.waitForPresence(locator);
-        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", element);
+        try {
+            List<WebElement> elements = getDriver().findElements(locator);
+            if (!elements.isEmpty()) {
+                ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", elements.get(0));
+            }
+        } catch (Exception ignored) {}
     }
 
     protected void highlight(WebElement element) {
         try {
             JavascriptExecutor js = (JavascriptExecutor) getDriver();
             js.executeScript("arguments[0].style.border='3px solid #ff0055'; arguments[0].style.backgroundColor='rgba(255,200,0,0.2)';", element);
-            if (!com.ecommerce.utils.ConfigReader.getBoolean("headless", false)) {
-                Thread.sleep(300);
-            }
         } catch (Exception ignored) {
             // Highlighting is a visual helper; don't fail test if script fails
         }

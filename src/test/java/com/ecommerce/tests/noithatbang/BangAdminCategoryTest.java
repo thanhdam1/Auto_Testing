@@ -52,11 +52,6 @@ public class BangAdminCategoryTest extends BaseTest {
         ExtentReportManager.logInfo("Tạo danh mục mới: " + catName);
         categoryPage.fillCategoryForm(catName, catSlug);
         categoryPage.submitSave();
-
-        // Chờ modal đóng
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(categoryPage.isModalOpen(), "Modal phải đóng lại sau khi lưu thành công");
     }
 
@@ -65,9 +60,6 @@ public class BangAdminCategoryTest extends BaseTest {
         categoryPage.openCreateModal();
         Assert.assertTrue(categoryPage.isModalOpen(), "Modal phải mở");
         categoryPage.closeModal();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(categoryPage.isModalOpen(), "Modal phải đóng khi bấm Hủy");
     }
 
@@ -75,7 +67,8 @@ public class BangAdminCategoryTest extends BaseTest {
     public void testCategoryListCount() {
         int count = categoryPage.getCategoryCount();
         ExtentReportManager.logInfo("Số lượng danh mục hiện tại: " + count);
-        Assert.assertTrue(count >= 0, "Bảng danh mục phải hiển thị danh sách dòng hợp lệ");
+        Assert.assertTrue(categoryPage.isPageLoaded() && (count > 0 || categoryPage.isEmptyStateDisplayed()),
+                "Bảng danh mục phải hiển thị danh sách dòng hoặc trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_CAT_006: Xóa danh mục -> Hiển thị Dialog xác nhận -> Bấm Hủy")

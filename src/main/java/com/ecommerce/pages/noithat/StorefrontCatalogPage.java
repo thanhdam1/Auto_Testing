@@ -37,7 +37,8 @@ public class StorefrontCatalogPage extends BasePage {
     public static final String SORT_NAME_ASC = "name-asc";
 
     // Locators
-    private final By headingCatalog = By.xpath("//h1[contains(text(),'Tất cả sản phẩm')]");
+    private final By headingCatalog = By.xpath("//h1 | //nav[@aria-label='Breadcrumb']");
+    private final By productGrid = By.cssSelector("[data-product-grid]");
     private final By productCards = By.cssSelector("[data-product]");
     private final By lblResultCount = By.cssSelector("[data-result-count]");
     private final By selectSort = By.cssSelector("select[data-sort]");
@@ -46,22 +47,33 @@ public class StorefrontCatalogPage extends BasePage {
     private final By cartToast = By.id("cart-toast-notification");
 
     public boolean isPageLoaded() {
-        return isDisplayed(headingCatalog);
+        return isDisplayed(productGrid) || isDisplayed(headingCatalog);
     }
 
     public int getVisibleProductCount() {
         try {
-            List<WebElement> cards = getDriver().findElements(productCards);
-            int visible = 0;
-            for (WebElement card : cards) {
-                if (card.isDisplayed()) {
-                    visible++;
-                }
-            }
-            return visible;
+            Long count = (Long) ((JavascriptExecutor) getDriver()).executeScript(
+                "const grid = document.querySelector('[data-product-grid]');" +
+                "if (!grid) return 0;" +
+                "const cards = grid.querySelectorAll('[data-product]');" +
+                "let visible = 0;" +
+                "cards.forEach(c => {" +
+                "  if (!c.classList.contains('hidden') && c.offsetWidth > 0) visible++;" +
+                "});" +
+                "return visible;"
+            );
+            return count != null ? count.intValue() : 0;
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    public int waitForAnyVisibleProductCount() {
+        return new WebDriverWait(getDriver(), Duration.ofSeconds(5))
+                .until(driver -> {
+                    int c = getVisibleProductCount();
+                    return c > 0 ? c : null;
+                });
     }
 
     /**
@@ -90,11 +102,15 @@ public class StorefrontCatalogPage extends BasePage {
     /**
      * Card sản phẩm đầu tiên đang thực sự hiển thị (đã tính cả phân trang và bộ lọc).
      */
+    @SuppressWarnings("unchecked")
     private WebElement firstVisibleCard() {
-        for (WebElement card : getDriver().findElements(productCards)) {
-            if (card.isDisplayed()) {
-                return card;
-            }
+        List<WebElement> cards = (List<WebElement>) ((JavascriptExecutor) getDriver()).executeScript(
+            "const grid = document.querySelector('[data-product-grid]');" +
+            "if (!grid) return [];" +
+            "return Array.from(grid.querySelectorAll('[data-product]')).filter(c => !c.classList.contains('hidden') && c.offsetWidth > 0);"
+        );
+        if (cards != null && !cards.isEmpty()) {
+            return cards.get(0);
         }
         throw new NoSuchElementException("Không có card sản phẩm nào hiển thị trên trang danh mục.");
     }
@@ -111,47 +127,53 @@ public class StorefrontCatalogPage extends BasePage {
         return CartPage.parseVnd(firstVisibleCard().getAttribute("data-price"));
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getVisibleProductSlugs() {
-        List<String> slugs = new ArrayList<>();
-        for (WebElement card : getDriver().findElements(productCards)) {
-            if (card.isDisplayed()) {
-                slugs.add(card.getAttribute("data-product"));
-            }
-        }
-        return slugs;
+        List<String> slugs = (List<String>) ((JavascriptExecutor) getDriver()).executeScript(
+            "return Array.from(document.querySelectorAll('[data-product-grid] [data-product]'))" +
+            "  .filter(c => !c.classList.contains('hidden') && c.offsetWidth > 0)" +
+            "  .map(c => c.getAttribute('data-product'));"
+        );
+        return slugs != null ? slugs : new ArrayList<>();
     }
 
     /**
      * Danh sách giá (VND) của các card đang hiển thị - dùng để kiểm chứng thứ tự sắp xếp.
      */
+    @SuppressWarnings("unchecked")
     public List<Long> getVisibleProductPrices() {
+        List<String> raw = (List<String>) ((JavascriptExecutor) getDriver()).executeScript(
+            "return Array.from(document.querySelectorAll('[data-product-grid] [data-product]'))" +
+            "  .filter(c => !c.classList.contains('hidden') && c.offsetWidth > 0)" +
+            "  .map(c => c.getAttribute('data-price'));"
+        );
         List<Long> prices = new ArrayList<>();
-        for (WebElement card : getDriver().findElements(productCards)) {
-            if (card.isDisplayed()) {
-                prices.add(CartPage.parseVnd(card.getAttribute("data-price")));
+        if (raw != null) {
+            for (String s : raw) {
+                prices.add(CartPage.parseVnd(s));
             }
         }
         return prices;
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getVisibleProductSpaces() {
-        List<String> spaces = new ArrayList<>();
-        for (WebElement card : getDriver().findElements(productCards)) {
-            if (card.isDisplayed()) {
-                spaces.add(card.getAttribute("data-space"));
-            }
-        }
-        return spaces;
+        List<String> spaces = (List<String>) ((JavascriptExecutor) getDriver()).executeScript(
+            "return Array.from(document.querySelectorAll('[data-product-grid] [data-product]'))" +
+            "  .filter(c => !c.classList.contains('hidden') && c.offsetWidth > 0)" +
+            "  .map(c => c.getAttribute('data-space'));"
+        );
+        return spaces != null ? spaces : new ArrayList<>();
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getVisibleProductCategories() {
-        List<String> categories = new ArrayList<>();
-        for (WebElement card : getDriver().findElements(productCards)) {
-            if (card.isDisplayed()) {
-                categories.add(card.getAttribute("data-category"));
-            }
-        }
-        return categories;
+        List<String> categories = (List<String>) ((JavascriptExecutor) getDriver()).executeScript(
+            "return Array.from(document.querySelectorAll('[data-product-grid] [data-product]'))" +
+            "  .filter(c => !c.classList.contains('hidden') && c.offsetWidth > 0)" +
+            "  .map(c => c.getAttribute('data-category'));"
+        );
+        return categories != null ? categories : new ArrayList<>();
     }
 
     public String getResultCountText() {
@@ -204,17 +226,22 @@ public class StorefrontCatalogPage extends BasePage {
 
     public void selectSortOption(String sortValue) {
         selectDropdownByValue(selectSort, sortValue, "Sắp xếp sản phẩm");
+        WaitUtil.waitUntil(driver -> sortValue.equals(
+                new org.openqa.selenium.support.ui.Select(driver.findElement(selectSort))
+                        .getFirstSelectedOption().getAttribute("value")), 5);
     }
 
     public boolean isProductWithTitleDisplayed(String title) {
         try {
-            List<WebElement> cards = getDriver().findElements(productCards);
-            for (WebElement card : cards) {
-                if (card.isDisplayed() && card.getText().toLowerCase().contains(title.toLowerCase())) {
-                    return true;
-                }
-            }
-            return false;
+            Boolean found = (Boolean) ((JavascriptExecutor) getDriver()).executeScript(
+                "const title = arguments[0].toLowerCase();" +
+                "const grid = document.querySelector('[data-product-grid]');" +
+                "if (!grid) return false;" +
+                "const cards = Array.from(grid.querySelectorAll('[data-product]'));" +
+                "return cards.some(c => !c.classList.contains('hidden') && c.offsetWidth > 0 && c.textContent.toLowerCase().includes(title));",
+                title
+            );
+            return Boolean.TRUE.equals(found);
         } catch (Exception e) {
             return false;
         }
@@ -243,11 +270,8 @@ public class StorefrontCatalogPage extends BasePage {
      * Mở trang chi tiết của sản phẩm đầu tiên đang hiển thị.
      */
     public ProductDetailPage openFirstProduct() {
-        WebElement card = firstVisibleCard();
-        WebElement link = card.findElement(By.cssSelector("a[href*='/san-pham/']"));
-        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block:'center'});", link);
-        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].click();", link);
-        return new ProductDetailPage();
+        String slug = getFirstProductSlug();
+        return openProductBySlug(slug);
     }
 
     /**

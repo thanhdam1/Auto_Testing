@@ -16,6 +16,10 @@ scratch/
 # Project 1 application is deployed separately from this test framework.
 check_noithat/
 
+# Python
+__pycache__/
+*.pyc
+
 # IDE files
 .idea/
 *.iml

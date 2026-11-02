@@ -37,6 +37,11 @@ public class AdminDashboardPage extends BasePage {
         }
     }
 
+    private final By navCategoriesLink = By.xpath("//a[@href='/admin/danh-muc']");
+    private final By navCustomersLink = By.xpath("//a[@href='/admin/khach-hang']");
+    private final By navImportLink = By.xpath("//a[@href='/admin/nhap-hang']");
+    private final By navCashbookLink = By.xpath("//a[@href='/admin/so-quy']");
+
     public AdminProductPage clickQuickAddProduct() {
         click(btnQuickAddProduct, "Quick Add Product button");
         return new AdminProductPage();
@@ -50,5 +55,25 @@ public class AdminDashboardPage extends BasePage {
     public AdminOrderPage navigateToOrders() {
         click(navOrdersLink, "Sidebar - Quản lý đơn hàng");
         return new AdminOrderPage();
+    }
+
+    public AdminCategoryPage navigateToCategories() {
+        click(navCategoriesLink, "Sidebar - Quản lý danh mục");
+        return new AdminCategoryPage();
+    }
+
+    public AdminCustomerPage navigateToCustomers() {
+        click(navCustomersLink, "Sidebar - Quản lý khách hàng");
+        return new AdminCustomerPage();
+    }
+
+    public AdminImportPage navigateToImportManagement() {
+        click(navImportLink, "Sidebar - Quản lý nhập hàng");
+        return new AdminImportPage();
+    }
+
+    public AdminCashbookPage navigateToCashbook() {
+        click(navCashbookLink, "Sidebar - Sổ quỹ & đối soát COD");
+        return new AdminCashbookPage();
     }
 }

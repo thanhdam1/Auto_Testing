@@ -1,10 +1,8 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
-
-import java.time.Duration;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Page Object for Website_NoiThat Admin Login Page (/login)
@@ -13,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class BangAdminLoginPage extends BasePage {
 
     // Locators
-    private final By headingTitle = By.xpath("//h1[contains(text(),'Nội Thất Admin')]");
+    private final By headingTitle = By.xpath("//h1[contains(text(),'GÓC NHÀ ĐẸP') or contains(text(),'Nội Thất Admin')]");
     private final By inputEmail = By.cssSelector("input[type='email']");
     private final By inputPassword = By.cssSelector("input[placeholder*='mật khẩu'], input[type='password']");
     private final By btnTogglePassword = By.cssSelector("button[tabindex='-1']");
@@ -42,11 +40,9 @@ public class BangAdminLoginPage extends BasePage {
         enterPassword(password);
         clickLogin();
         try {
-            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(6));
-            wait.until(driver -> !driver.getCurrentUrl().contains("/login") ||
-                                 driver.findElements(serverErrorAlert).size() > 0 ||
-                                 driver.findElements(validationError).size() > 0);
-            Thread.sleep(300);
+            WaitUtil.waitUntil(driver -> !driver.getCurrentUrl().contains("/login") ||
+                    driver.findElements(serverErrorAlert).stream().anyMatch(element -> element.isDisplayed()) ||
+                    driver.findElements(validationError).stream().anyMatch(element -> element.isDisplayed()), 6);
         } catch (Exception ignored) {
         }
     }

@@ -65,7 +65,8 @@ public class BangAdminProductCRUDTest extends BaseTest {
     public void testProductTableRows() {
         int count = productPage.getProductRowsCount();
         ExtentReportManager.logInfo("Số lượng sản phẩm trong bảng: " + count);
-        Assert.assertTrue(count >= 0, "Bảng sản phẩm phải tải hợp lệ");
+        Assert.assertTrue(productPage.isPageLoaded() && (count > 0 || productPage.isEmptyStateDisplayed()),
+                "Bảng sản phẩm phải tải dữ liệu hoặc hiển thị trạng thái rỗng hợp lệ");
     }
 
     @Test(description = "WNT_PRD_008: Lọc sản phẩm theo trạng thái active/draft")
@@ -73,6 +74,7 @@ public class BangAdminProductCRUDTest extends BaseTest {
         productPage.filterByStatus("active");
         int activeCount = productPage.getProductRowsCount();
         ExtentReportManager.logInfo("Số lượng sản phẩm Active: " + activeCount);
-        Assert.assertTrue(activeCount >= 0, "Lọc trạng thái Active thành công");
+        Assert.assertTrue(productPage.isPageLoaded() && (activeCount > 0 || productPage.isEmptyStateDisplayed()),
+                "Lọc trạng thái Active thành công và hiển thị dữ liệu hoặc trạng thái rỗng hợp lệ");
     }
 }

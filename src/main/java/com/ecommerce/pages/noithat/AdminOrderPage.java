@@ -1,7 +1,9 @@
 package com.ecommerce.pages.noithat;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -30,7 +32,27 @@ public class AdminOrderPage extends BasePage {
     }
 
     public void searchOrder(String keyword) {
-        type(inputSearchOrder, keyword, "Ô tìm kiếm đơn hàng");
+        WebElement el = find(inputSearchOrder);
+        el.clear();
+        el.sendKeys(keyword);
+        ((JavascriptExecutor) getDriver()).executeScript(
+            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));", el);
+        WaitUtil.waitUntil(driver -> driver.findElements(orderTableRows).stream()
+                .filter(WebElement::isDisplayed)
+                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
+    }
+
+    public String getFirstOrderCode() {
+        try {
+            List<WebElement> rows = getDriver().findElements(orderTableRows);
+            for (WebElement row : rows) {
+                if (row.isDisplayed()) {
+                    String code = row.getAttribute("data-code");
+                    if (code != null && !code.isBlank()) return code;
+                }
+            }
+        } catch (Exception e) {}
+        return null;
     }
 
     public void filterByStatus(String statusValue) {

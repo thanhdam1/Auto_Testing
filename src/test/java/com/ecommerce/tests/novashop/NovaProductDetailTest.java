@@ -5,6 +5,7 @@ import com.ecommerce.pages.novashop.NovaCartPage;
 import com.ecommerce.pages.novashop.NovaProductDetailPage;
 import com.ecommerce.pages.novashop.NovaSearchPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.WaitUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -55,10 +56,6 @@ public class NovaProductDetailTest extends BaseTest {
         ExtentReportManager.logInfo("Nhấn 'Thêm Vào Giỏ Hàng'");
         productDetailPage.clickAddToCart();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(productDetailPage.isToastDisplayed(), "Thông báo Toast phải xuất hiện khi thêm vào giỏ.");
     }
 
@@ -66,10 +63,7 @@ public class NovaProductDetailTest extends BaseTest {
     public void testBuyNowRedirectsToCart() {
         ExtentReportManager.logInfo("Nhấn 'Mua Ngay'");
         NovaCartPage cartPage = productDetailPage.clickBuyNow();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlContains("/gio-hang", 10);
 
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL sau khi nhấn Mua Ngay: " + currentUrl);
@@ -89,10 +83,6 @@ public class NovaProductDetailTest extends BaseTest {
         ExtentReportManager.logInfo("Nhấn nút Theo Dõi Shop");
         productDetailPage.toggleFollowShop();
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
-
         Assert.assertTrue(productDetailPage.isToastDisplayed() || !productDetailPage.getFollowButtonText().isEmpty(),
                 "Phải hiển thị Toast thông báo hoặc cập nhật trạng thái Theo Dõi.");
     }
@@ -101,10 +91,7 @@ public class NovaProductDetailTest extends BaseTest {
     public void testNavigateToShopProfile() {
         ExtentReportManager.logInfo("Nhấn link 'Xem Shop'");
         productDetailPage.clickShopLink();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ignored) {}
+        WaitUtil.waitForUrlContains("/shop/", 10);
 
         String currentUrl = getDriver().getCurrentUrl();
         ExtentReportManager.logInfo("URL gian hàng: " + currentUrl);

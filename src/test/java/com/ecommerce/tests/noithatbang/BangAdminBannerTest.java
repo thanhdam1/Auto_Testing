@@ -40,9 +40,6 @@ public class BangAdminBannerTest extends BaseTest {
         bannerPage.openCreateModal();
         Assert.assertTrue(bannerPage.isModalOpen(), "Modal thêm banner phải mở ra");
         bannerPage.closeModal();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(bannerPage.isModalOpen(), "Modal phải đóng khi bấm Hủy");
     }
 

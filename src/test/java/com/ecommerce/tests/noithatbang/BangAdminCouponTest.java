@@ -40,9 +40,6 @@ public class BangAdminCouponTest extends BaseTest {
         couponPage.openCreateModal();
         Assert.assertTrue(couponPage.isModalOpen(), "Modal tạo mã mới phải mở ra");
         couponPage.closeModal();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(couponPage.isModalOpen(), "Modal phải đóng khi bấm Hủy");
     }
 
@@ -53,10 +50,6 @@ public class BangAdminCouponTest extends BaseTest {
         ExtentReportManager.logInfo("Tạo mã giảm giá phần trăm: " + code);
         couponPage.fillCouponForm(code, "percent", "15", "500000");
         couponPage.submitSave();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(couponPage.isModalOpen(), "Modal phải đóng lại sau khi lưu");
     }
 
@@ -67,10 +60,6 @@ public class BangAdminCouponTest extends BaseTest {
         ExtentReportManager.logInfo("Tạo mã giảm giá số tiền cố định: " + code);
         couponPage.fillCouponForm(code, "fixed", "100000", "1000000");
         couponPage.submitSave();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ignored) {}
         Assert.assertFalse(couponPage.isModalOpen(), "Modal phải đóng lại sau khi lưu");
     }
 

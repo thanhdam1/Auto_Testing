@@ -1,6 +1,7 @@
 package com.ecommerce.pages.novashop;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -85,9 +86,9 @@ public class NovaSearchPage extends BasePage {
         try {
             if (isDisplayed(inputSearchCity)) {
                 type(inputSearchCity, locationName, "Tìm tỉnh / thành phố");
-                Thread.sleep(500);
             }
             By targetCity = By.xpath("//aside//div[contains(@class,'thin-scroll')]//label[1] | //aside//label[contains(., 'Toàn quốc')]");
+            WaitUtil.waitForVisibility(targetCity, 5);
             if (!getDriver().findElements(targetCity).isEmpty()) {
                 WebElement el = getDriver().findElement(targetCity);
                 ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", el);
