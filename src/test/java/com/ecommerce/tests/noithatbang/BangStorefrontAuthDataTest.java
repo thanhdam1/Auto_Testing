@@ -77,7 +77,7 @@ public class BangStorefrontAuthDataTest extends BaseTest {
         storefrontPage.switchAuthTab("login");
         storefrontPage.fillLoginForm("test@example.com", "SecretPass123");
 
-        By passInput = By.xpath("//form//input[@placeholder='Nhập mật khẩu của bạn']");
+        By passInput = By.xpath("//form//input[@type='password' or @placeholder='••••••••' or @placeholder='Nhập mật khẩu của bạn']");
         String initialType = getDriver().findElement(passInput).getAttribute("type");
         Assert.assertEquals(initialType, "password", "Ban đầu mật khẩu phải ở dạng ẩn (type=password)");
 

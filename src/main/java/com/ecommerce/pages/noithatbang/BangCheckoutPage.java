@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
@@ -47,9 +48,14 @@ public class BangCheckoutPage extends BasePage {
     private final By btnSubmitOrder = By.xpath("//button[@type='submit' and contains(.,'ĐẶT HÀNG')]");
     private final By submitAlertError = By.cssSelector(".bg-rose-50.text-rose-700");
 
+    // Price Summary
+    private final By textSubtotal = By.xpath("//div[span[contains(text(),'Tạm tính')]]/span[contains(@class,'font-serif')]");
+    private final By textDiscount = By.xpath("//div[span[contains(text(),'Giảm giá')]]/span[contains(@class,'font-serif')]");
+    private final By textTotal = By.xpath("//div[span[contains(text(),'Tổng thanh toán')]]//span[contains(@class,'font-serif')]");
+
     // Order Success Screen
-    private final By successHeading = By.xpath("//h1[contains(text(),'ĐẶT HÀNG THÀNH CÔNG!')]");
-    private final By orderCode = By.xpath("//div[contains(text(),'Mã đơn hàng:')]//span");
+    private final By successHeading = By.xpath("//h1[contains(.,'ĐẶT HÀNG THÀNH CÔNG') or contains(.,'HOÀN TẤT')]");
+    private final By orderCode = By.xpath("//div[contains(.,'Mã đơn hàng:')]//span | //div[contains(.,'Mã thanh toán:')]//span");
     private final By btnViewMyOrders = By.xpath("//a[contains(@href,'/orders') and contains(.,'Xem đơn hàng')]");
     private final By vietQrImage = By.xpath("//img[contains(@src,'vietqr.io')]");
 
@@ -154,6 +160,87 @@ public class BangCheckoutPage extends BasePage {
 
     public String getSuccessOrderCode() {
         return getText(orderCode);
+    }
+
+    public long getSubtotal() {
+        return parseCurrency(getText(textSubtotal));
+    }
+
+    public long getDiscountAmount() {
+        if (isDisplayed(textDiscount)) {
+            return parseCurrency(getText(textDiscount));
+        }
+        return 0;
+    }
+
+    public long getTotalAmount() {
+        return parseCurrency(getText(textTotal));
+    }
+
+    public static long parseCurrency(String text) {
+        if (text == null) return 0;
+        String clean = text.replaceAll("[^0-9]", "");
+        return clean.isEmpty() ? 0 : Long.parseLong(clean);
+    }
+
+    public void clearRecipientName() {
+        clearField(inputRecipientName);
+    }
+
+    public void clearRecipientPhone() {
+        clearField(inputRecipientPhone);
+    }
+
+    public void clearRecipientEmail() {
+        clearField(inputEmail);
+    }
+
+    public void clearStreet() {
+        clearField(inputStreet);
+    }
+
+    private void clearField(By locator) {
+        try {
+            org.openqa.selenium.WebElement el = getDriver().findElement(locator);
+            el.click();
+            ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript(
+                    "arguments[0].value = '';" +
+                    "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+                    "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));", el);
+        } catch (Exception ignored) {}
+    }
+
+    public boolean isFieldInvalidByHtml5(String field) {
+        By locator;
+        if ("name".equalsIgnoreCase(field)) locator = inputRecipientName;
+        else if ("phone".equalsIgnoreCase(field)) locator = inputRecipientPhone;
+        else if ("email".equalsIgnoreCase(field)) locator = inputEmail;
+        else if ("street".equalsIgnoreCase(field)) locator = inputStreet;
+        else locator = inputRecipientName;
+
+        try {
+            org.openqa.selenium.WebElement el = getDriver().findElement(locator);
+            String val = el.getAttribute("value");
+            boolean isRequired = el.getAttribute("required") != null;
+            if (isRequired && (val == null || val.trim().isEmpty())) {
+                return true;
+            }
+            Boolean isValid = (Boolean) ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("return arguments[0].checkValidity();", el);
+            return isValid != null && !isValid;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void doubleClickSubmitOrder() {
+        if (isDisplayed(btnSubmitOrder)) {
+            org.openqa.selenium.WebElement btn = WaitUtil.waitForClickability(btnSubmitOrder);
+            ((org.openqa.selenium.JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView({block: 'center'});", btn);
+            btn.click();
+            try {
+                btn.click();
+            } catch (Exception ignored) {}
+        }
     }
 
     public boolean isVietQrImageDisplayed() {

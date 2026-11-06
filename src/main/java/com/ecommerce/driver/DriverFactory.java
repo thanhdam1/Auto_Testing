@@ -2,6 +2,7 @@ package com.ecommerce.driver;
 
 import com.ecommerce.utils.ConfigReader;
 import com.ecommerce.utils.LogUtil;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -40,6 +41,7 @@ public final class DriverFactory {
         switch (target) {
             case EDGE:
                 EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
                 if (headless) {
                     edgeOptions.addArguments("--headless=new");
                 }
@@ -72,6 +74,7 @@ public final class DriverFactory {
                     }
                 }
                 ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
                 if (headless) {
                     chromeOptions.addArguments("--headless=new");
                     chromeOptions.addArguments("--window-size=1920,1080");
@@ -79,6 +82,9 @@ public final class DriverFactory {
                     chromeOptions.addArguments("--start-maximized");
                     chromeOptions.addArguments("--window-position=0,0");
                 }
+                chromeOptions.addArguments("--no-sandbox");
+                chromeOptions.addArguments("--disable-dev-shm-usage");
+                chromeOptions.addArguments("--disable-gpu");
                 chromeOptions.addArguments("--disable-notifications");
                 chromeOptions.addArguments("--force-prefers-reduced-motion");
                 chromeOptions.addArguments("--disable-popup-blocking");

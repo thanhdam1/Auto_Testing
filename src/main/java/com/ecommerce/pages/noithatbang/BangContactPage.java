@@ -68,7 +68,11 @@ public class BangContactPage extends BasePage {
     }
 
     public String getSuccessAlertText() {
-        return getText(alertSuccess);
+        try {
+            return getText(alertSuccess);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public boolean isErrorAlertDisplayed() {
@@ -76,6 +80,47 @@ public class BangContactPage extends BasePage {
     }
 
     public String getErrorAlertText() {
-        return getText(alertError);
+        try {
+            return getText(alertError);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public void clearFullName() {
+        clearField(inputFullName);
+    }
+
+    public void clearEmail() {
+        clearField(inputEmail);
+    }
+
+    public void clearMessage() {
+        clearField(textareaMessage);
+    }
+
+    public boolean isInputRequired(String field) {
+        By locator;
+        if ("email".equalsIgnoreCase(field)) locator = inputEmail;
+        else if ("phone".equalsIgnoreCase(field)) locator = inputPhone;
+        else if ("message".equalsIgnoreCase(field)) locator = textareaMessage;
+        else locator = inputFullName;
+
+        try {
+            org.openqa.selenium.WebElement el = getDriver().findElement(locator);
+            return el.getAttribute("required") != null || "true".equals(el.getAttribute("required"));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private void clearField(By locator) {
+        try {
+            org.openqa.selenium.WebElement el = getDriver().findElement(locator);
+            el.click();
+            el.sendKeys(org.openqa.selenium.Keys.CONTROL + "a");
+            el.sendKeys(org.openqa.selenium.Keys.BACK_SPACE);
+            el.clear();
+        } catch (Exception ignored) {}
     }
 }

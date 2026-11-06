@@ -81,6 +81,22 @@ public final class BangStorefrontTestData {
     }
 
     /**
+     * Checkout Form Validation Data (Negative Single-Field Cases)
+     */
+    @DataProvider(name = "checkoutNegativeValidationData")
+    public static Object[][] getCheckoutNegativeValidationData() {
+        return new Object[][] {
+            { "name", "", "Vui lòng nhập họ và tên người nhận hàng", "Bỏ trống họ tên người nhận" },
+            { "name", "   ", "Vui lòng nhập họ và tên người nhận hàng", "Họ tên chỉ chứa khoảng trắng" },
+            { "phone", "", "Vui lòng nhập số điện thoại người nhận hàng", "Bỏ trống số điện thoại" },
+            { "phone", "   ", "Vui lòng nhập số điện thoại người nhận hàng", "SĐT chỉ chứa khoảng trắng" },
+            { "street", "", "Vui lòng nhập địa chỉ cụ thể", "Bỏ trống địa chỉ đường/nhà" },
+            { "street", "   ", "Vui lòng nhập địa chỉ cụ thể", "Địa chỉ đường chỉ chứa khoảng trắng" },
+            { "email", "", "Vui lòng nhập email", "Bỏ trống email khi chưa đăng nhập" }
+        };
+    }
+
+    /**
      * Contact Form Subjects Data:
      */
     @DataProvider(name = "contactSubjectsData")

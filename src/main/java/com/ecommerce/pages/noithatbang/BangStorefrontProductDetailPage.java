@@ -1,6 +1,7 @@
 package com.ecommerce.pages.noithatbang;
 
 import com.ecommerce.pages.base.BasePage;
+import com.ecommerce.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -97,6 +98,9 @@ public class BangStorefrontProductDetailPage extends BasePage {
 
     public void clickAddToCart() {
         click(btnAddToCart, "Nút THÊM VÀO GIỎ");
+        try {
+            WaitUtil.waitForVisibility(By.cssSelector("[data-sonner-toast], [data-sonner-toaster]"), 5);
+        } catch (Exception ignored) {}
     }
 
     public void clickBuyNow() {
@@ -108,7 +112,13 @@ public class BangStorefrontProductDetailPage extends BasePage {
     }
 
     public boolean isFavoriteActive() {
-        return isDisplayed(heartFilled);
+        try {
+            WebElement btn = getDriver().findElement(btnFavorite);
+            return btn.getAttribute("class").contains("border-red-500") ||
+                   !btn.findElements(By.cssSelector("svg.fill-red-600")).isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void selectSecondaryImage(int index) {

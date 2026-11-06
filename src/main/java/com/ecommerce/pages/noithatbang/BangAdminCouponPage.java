@@ -30,12 +30,32 @@ public class BangAdminCouponPage extends BasePage {
     // Table
     private final By tableRows = By.cssSelector("table tbody tr");
     private final By emptyStateRow = By.xpath("//table//tbody//tr[contains(.,'Chưa có') or contains(.,'chưa có')]");
-    private final By btnDeleteFirst = By.xpath("(//table//tbody//tr[not(contains(.,'Chưa có'))]//button[contains(@class,'text-rose') or contains(@class,'text-red') or contains(@title,'Xóa') or descendant::*[local-name()='svg' and contains(@class,'lucide-trash')]])[1]");
+    private final By btnDeleteFirst = By.cssSelector("table tbody tr button[title='Xóa mã'], table tbody tr button[title*='Xóa']");
     private final By confirmDeleteDialog = By.xpath("//h3[contains(.,'Xác nhận xóa')] | //div[contains(@class,'fixed')]//*[contains(.,'Xác nhận xóa')]");
     private final By btnCancelDelete = By.xpath("//div[contains(@class,'fixed')]//button[contains(.,'Hủy')]");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingCoupon) && isDisplayed(btnCreateCoupon);
+    }
+
+    public void waitForDataLoaded() {
+        try {
+            WaitUtil.waitUntil(driver -> {
+                boolean skeleton = driver.findElements(By.cssSelector(".animate-pulse, [data-skeleton]")).size() > 0;
+                if (skeleton) return false;
+                return !driver.findElements(tableRows).isEmpty() || isDisplayed(emptyStateRow);
+            }, 8);
+        } catch (Exception ignored) {}
+    }
+
+    public boolean isCouponCodePresent(String code) {
+        waitForDataLoaded();
+        try {
+            return findAll(tableRows).stream()
+                    .anyMatch(r -> r.getText().toUpperCase().contains(code.toUpperCase()));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void openCreateModal() {
@@ -71,7 +91,7 @@ public class BangAdminCouponPage extends BasePage {
     }
 
     public boolean hasCoupons() {
-        return !isDisplayed(emptyStateRow) && isDisplayed(btnDeleteFirst);
+        return getCouponCount() > 0 && isDisplayed(btnDeleteFirst);
     }
 
     public int getCouponCount() {

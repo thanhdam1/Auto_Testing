@@ -30,7 +30,7 @@ public class BangAdminOrdersPage extends BasePage {
     private final By tableHeaders = By.cssSelector("table thead th");
     private final By tableRows = By.cssSelector("table tbody tr");
     private final By linkFirstOrderDetail = By.xpath("(//table tbody tr//a[contains(@href,'/orders/')])[1]");
-    private final By emptyState = By.xpath("//div[contains(.,'Không tìm thấy đơn hàng')]");
+    private final By emptyState = By.xpath("//td[contains(.,'Không có đơn hàng') or contains(.,'Chưa có đơn hàng') or contains(.,'Không tìm thấy')] | //div[contains(.,'Không tìm thấy đơn hàng')]");
 
     public boolean isPageLoaded() {
         return isDisplayed(headingTitle);
@@ -46,9 +46,17 @@ public class BangAdminOrdersPage extends BasePage {
 
     public void searchOrder(String keyword) {
         type(inputSearch, keyword, "Tìm kiếm đơn hàng: " + keyword);
-        WaitUtil.waitUntil(driver -> driver.findElements(tableRows).stream()
-                .filter(WebElement::isDisplayed)
-                .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())), 5);
+        try {
+            WaitUtil.waitUntil(driver -> {
+                List<WebElement> rows = driver.findElements(tableRows);
+                if (rows.isEmpty() || isDisplayed(emptyState)) return true;
+                return rows.stream().filter(WebElement::isDisplayed)
+                        .allMatch(row -> row.getText().toLowerCase().contains(keyword.toLowerCase())
+                                || row.getText().toLowerCase().contains("không có")
+                                || row.getText().toLowerCase().contains("chưa có")
+                                || row.findElements(By.xpath(".//td[@colspan]")).size() > 0);
+            }, 5);
+        } catch (Exception ignored) {}
     }
 
     public void filterByStatus(String status) {
@@ -64,17 +72,59 @@ public class BangAdminOrdersPage extends BasePage {
         WaitUtil.waitForClickability(target, 5);
     }
 
+    public void waitForTableLoaded() {
+        try {
+            WaitUtil.waitUntil(driver -> {
+                boolean skeleton = driver.findElements(By.cssSelector(".animate-pulse, [data-skeleton]")).size() > 0;
+                if (skeleton) return false;
+                return !driver.findElements(tableRows).isEmpty() || isDisplayed(emptyState);
+            }, 8);
+        } catch (Exception ignored) {}
+    }
+
+    public List<String> getAllOrderStatuses() {
+        waitForTableLoaded();
+        try {
+            return findAll(By.cssSelector("table tbody tr")).stream()
+                    .filter(r -> r.findElements(By.xpath(".//td[@colspan]")).isEmpty())
+                    .map(r -> {
+                        List<WebElement> badges = r.findElements(By.cssSelector("td:nth-child(6)"));
+                        return badges.isEmpty() ? "" : badges.get(0).getText().trim();
+                    })
+                    .toList();
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    public List<String> getAllOrderNumbers() {
+        waitForTableLoaded();
+        try {
+            return findAll(By.cssSelector("table tbody tr")).stream()
+                    .filter(r -> r.findElements(By.xpath(".//td[@colspan]")).isEmpty())
+                    .map(r -> {
+                        List<WebElement> links = r.findElements(By.cssSelector("td:first-child a"));
+                        return links.isEmpty() ? "" : links.get(0).getText().trim();
+                    })
+                    .toList();
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
     public int getOrderRowCount() {
         try {
             List<WebElement> rows = findAll(tableRows);
-            return rows.size();
+            return (int) rows.stream()
+                    .filter(r -> r.findElements(By.xpath(".//td[@colspan]")).isEmpty())
+                    .count();
         } catch (Exception e) {
             return 0;
         }
     }
 
     public boolean isEmptyStateDisplayed() {
-        return isDisplayed(emptyState);
+        return isDisplayed(emptyState) || getOrderRowCount() == 0;
     }
 
     public void clickFirstOrderDetail() {

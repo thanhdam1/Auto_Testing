@@ -42,19 +42,35 @@ public class ApiClient {
     }
 
     public ApiResponse get(String path) {
-        return send("GET", path, null);
+        return send("GET", path, null, null);
+    }
+
+    public ApiResponse get(String path, String bearerToken) {
+        return send("GET", path, null, bearerToken);
     }
 
     public ApiResponse post(String path, Object payload) {
-        return send("POST", path, serialize(payload));
+        return send("POST", path, serialize(payload), null);
+    }
+
+    public ApiResponse post(String path, Object payload, String bearerToken) {
+        return send("POST", path, serialize(payload), bearerToken);
     }
 
     public ApiResponse put(String path, Object payload) {
-        return send("PUT", path, serialize(payload));
+        return send("PUT", path, serialize(payload), null);
+    }
+
+    public ApiResponse put(String path, Object payload, String bearerToken) {
+        return send("PUT", path, serialize(payload), bearerToken);
     }
 
     public ApiResponse delete(String path) {
-        return send("DELETE", path, null);
+        return send("DELETE", path, null, null);
+    }
+
+    public ApiResponse delete(String path, String bearerToken) {
+        return send("DELETE", path, null, bearerToken);
     }
 
     /**
@@ -77,11 +93,19 @@ public class ApiClient {
     }
 
     private ApiResponse send(String method, String path, String body) {
+        return send(method, path, body, null);
+    }
+
+    private ApiResponse send(String method, String path, String body, String bearerToken) {
         String url = baseUrl + (path.startsWith("/") ? path : "/" + path);
         HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(url))
                 .timeout(REQUEST_TIMEOUT)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json");
+
+        if (bearerToken != null && !bearerToken.isBlank()) {
+            builder.header("Authorization", "Bearer " + bearerToken.trim());
+        }
 
         HttpRequest request = switch (method) {
             case "POST" -> builder.POST(HttpRequest.BodyPublishers.ofString(body == null ? "{}" : body)).build();

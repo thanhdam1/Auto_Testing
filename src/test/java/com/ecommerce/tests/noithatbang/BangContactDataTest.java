@@ -3,12 +3,13 @@ package com.ecommerce.tests.noithatbang;
 import com.ecommerce.base.BaseTest;
 import com.ecommerce.pages.noithatbang.BangContactPage;
 import com.ecommerce.reports.ExtentReportManager;
+import com.ecommerce.utils.WaitUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Data-Driven Test Class for Storefront Contact Page (/contact or /lien-he)
+ * Data-Driven & Validation Test Class for Storefront Contact Page (/contact or /lien-he)
  * Port: 4321
  */
 public class BangContactDataTest extends BaseTest {
@@ -31,18 +32,33 @@ public class BangContactDataTest extends BaseTest {
     }
 
     @Test(dataProvider = "contactSubjectsData", dataProviderClass = BangStorefrontTestData.class,
-          description = "Kiểm tra Gửi tin nhắn liên hệ thành công với các chủ đề khác nhau (Data-Driven)")
+          description = "Kiểm tra Gửi tin nhắn liên hệ thành công với các chủ đề khác nhau và chứng minh nghiệp vụ")
     public void testSubmitContactWithDiverseSubjects(String subject) {
         String uniqueEmail = BangStorefrontTestData.generateUniqueEmail("auto_contact");
         String fullName = "Khách Hàng Tư Vấn " + System.currentTimeMillis();
         String phone = "0931883988";
-        String message = "Xin chào Góc Nhà Đẹp, tôi quan tâm đến chủ đề: " + subject + ". Nhờ chuyên viên tư vấn hỗ trợ.";
+        String message = "Xin chào Góc Nhà Đẹp, tôi quan tâm đến chủ đề: " + subject + ". Nhờ chuyên viên tư vấn hỗ trợ chi tiết.";
 
         ExtentReportManager.logInfo("Gửi liên hệ với chủ đề: " + subject + " | Email: " + uniqueEmail);
         contactPage.fillContactForm(fullName, phone, uniqueEmail, subject, message);
         contactPage.submitContactForm();
 
-        boolean isSuccess = contactPage.isSuccessAlertDisplayed();
-        ExtentReportManager.logInfo("Kết quả gửi liên hệ - Hiển thị phản hồi: " + isSuccess);
+        WaitUtil.waitUntil(driver -> contactPage.isSuccessAlertDisplayed(), 6);
+        Assert.assertTrue(contactPage.isSuccessAlertDisplayed(), "Hệ thống phải hiển thị thông báo gửi liên hệ thành công");
+        String successText = contactPage.getSuccessAlertText();
+        ExtentReportManager.logInfo("Nội dung thông báo thành công: " + successText);
+        Assert.assertTrue(successText.contains("Gửi liên hệ thành công"), "Thông báo phải có nội dung 'Gửi liên hệ thành công'");
+    }
+
+    @Test(description = "Validation Form Liên hệ: Các trường bắt buộc (Họ tên, Email, Nội dung) phải có thuộc tính required và chặn gửi khi bỏ trống")
+    public void testContactFormMissingRequiredFields() {
+        // 1. Kiểm tra các trường bắt buộc theo HTML5 Form Contract
+        Assert.assertTrue(contactPage.isInputRequired("fullName"), "Trường Họ tên phải là trường bắt buộc (required)");
+        Assert.assertTrue(contactPage.isInputRequired("email"), "Trường Email phải là trường bắt buộc (required)");
+        Assert.assertTrue(contactPage.isInputRequired("message"), "Trường Nội dung tin nhắn phải là trường bắt buộc (required)");
+
+        // 2. Bỏ trống toàn bộ form và bấm submit -> form bị chặn, không có alert thành công
+        contactPage.submitContactForm();
+        Assert.assertFalse(contactPage.isSuccessAlertDisplayed(), "Hệ thống không được gửi thành công khi bỏ trống form");
     }
 }
