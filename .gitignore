@@ -28,6 +28,11 @@ __pycache__/
 .project
 .settings/
 
+# Environment and Secrets
+.env
+*.env
+.env.*
+
 # OS files
 Thumbs.db
 Desktop.ini
